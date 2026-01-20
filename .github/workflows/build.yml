@@ -32,7 +32,7 @@ jobs:
           rm -f .npmrc  # Remove local .npmrc, use setup-node's auth
           pnpm install
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
       - name: Type check
         run: pnpm typecheck
