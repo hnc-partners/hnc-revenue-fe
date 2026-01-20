@@ -28,7 +28,9 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          rm -f .npmrc  # Remove local .npmrc, use setup-node's auth
+          pnpm install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
