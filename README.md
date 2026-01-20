@@ -17,11 +17,40 @@ A starter template for HNC micro-frontends with authentication, routing, and sha
 
 - Node.js 20+
 - pnpm
+- GitHub account with access to hnc-partners org
+
+### GitHub Packages Authentication
+
+This template uses private packages from `@hnc-partners/*`. You need to authenticate with GitHub Packages before installing:
+
+**Option 1: Environment Variable (Recommended)**
+
+Set `GITHUB_TOKEN` with a GitHub PAT that has `read:packages` scope:
+
+```bash
+export GITHUB_TOKEN=ghp_your_token_here
+pnpm install
+```
+
+**Option 2: Global npmrc**
+
+Add to your `~/.npmrc`:
+
+```
+@hnc-partners:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=ghp_your_token_here
+```
+
+**Creating a GitHub PAT:**
+
+1. Go to GitHub Settings > Developer settings > Personal access tokens > Tokens (classic)
+2. Generate new token with `read:packages` scope
+3. Copy the token and use one of the options above
 
 ### Installation
 
 ```bash
-# Install dependencies
+# Install dependencies (requires GitHub auth - see above)
 pnpm install
 
 # Start development server
