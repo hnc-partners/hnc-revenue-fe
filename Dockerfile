@@ -7,11 +7,14 @@ WORKDIR /app
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy package files (no lockfile - pnpm workspace uses root lockfile)
-COPY package.json ./
+# Copy package files and npmrc (if exists - for private packages)
+COPY package.json pnpm-lock.yaml* .npmrc* ./
 
 # Install dependencies
 RUN pnpm install
+
+# Remove npmrc after install (don't leak token to final image)
+RUN rm -f .npmrc
 
 # Copy source files
 COPY . .
@@ -26,16 +29,20 @@ RUN pnpm build
 # ============================================
 FROM docker.io/library/nginx:alpine AS runner
 
+# Default port (override with -e PORT=4000)
+ENV PORT=80
+
 # Copy built assets
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy nginx config for SPA routing
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx config template (uses envsubst for PORT)
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-# Health check
+# Health check (uses PORT env var)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/ || exit 1
 
-EXPOSE 80
+EXPOSE ${PORT}
 
+# nginx:alpine uses docker-entrypoint which auto-runs envsubst on templates
 CMD ["nginx", "-g", "daemon off;"]
