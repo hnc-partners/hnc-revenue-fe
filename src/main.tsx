@@ -6,6 +6,19 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { routeTree } from './routeTree.gen';
 import './index.css';
 
+// Shell detection for Module Federation
+declare global {
+  interface Window {
+    __SHELL__?: boolean;
+  }
+}
+
+// Shell detection for conditional AuthProvider
+// In shell mode (!window.__SHELL__ = false), shell provides AuthProvider
+// In standalone mode (!window.__SHELL__ = true), we provide our own
+// See new-frontend-guide.md Step 7 for full conditional pattern
+// Example: const isStandalone = !window.__SHELL__;
+
 // Create a query client
 const queryClient = new QueryClient({
   defaultOptions: {

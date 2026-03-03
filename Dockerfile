@@ -29,6 +29,10 @@ RUN pnpm build
 # ============================================
 FROM docker.io/library/nginx:alpine AS runner
 
+# Build metadata (PLAN-057: version visibility)
+ARG BUILD_COMMIT=dev
+ENV BUILD_COMMIT=$BUILD_COMMIT
+
 # Default port (override with -e PORT=4000)
 ENV PORT=80
 

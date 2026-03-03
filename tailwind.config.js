@@ -1,17 +1,28 @@
+/**
+ * HNC MF Template Tailwind Config (PLAN-049/PLAN-050 Standard)
+ *
+ * Shell owns :root theme vars -- this MF just references them.
+ * Based on: docs/design/mf-tailwind-config-template.js
+ */
+
+import tailwindcssAnimate from 'tailwindcss-animate';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+    // REQUIRED: ui-components classes must be in Tailwind's scan
+    './node_modules/@hnc-partners/ui-components/dist/**/*.js',
+  ],
   theme: {
     extend: {
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
-        brand: {
-          DEFAULT: 'hsl(var(--brand))',
-          foreground: 'hsl(var(--brand-foreground))',
-        },
+        // --- Base shadcn/ui tokens (resolved from shell's scoped CSS vars) ---
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -42,6 +53,15 @@ export default {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+
+        // --- HNC semantic tokens ---
+        brand: {
+          DEFAULT: 'hsl(var(--brand))',
+          foreground: 'hsl(var(--brand-foreground))',
+        },
         success: {
           DEFAULT: 'hsl(var(--success))',
           foreground: 'hsl(var(--success-foreground))',
@@ -54,9 +74,15 @@ export default {
           DEFAULT: 'hsl(var(--info))',
           foreground: 'hsl(var(--info-foreground))',
         },
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
+
+        // --- MF identity color (shell provides values via [data-mf="SERVICE_NAME"]) ---
+        'mf-accent': {
+          DEFAULT: 'hsl(var(--mf-accent))',
+          foreground: 'hsl(var(--mf-accent-foreground))',
+        },
+      },
+      boxShadow: {
+        panel: 'var(--shadow-panel)',
       },
       borderRadius: {
         lg: 'var(--radius-lg)',
@@ -65,5 +91,6 @@ export default {
       },
     },
   },
-  plugins: [],
+  // REQUIRED: tailwindcss-animate for shadcn/ui component animations
+  plugins: [tailwindcssAnimate],
 };
