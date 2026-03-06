@@ -12,6 +12,7 @@ export default defineConfig({
   },
   test: {
     ...sharedVitestConfig,
+    passWithNoTests: true,
     setupFiles: ['./src/test/setup.ts'],
     coverage: {
       ...sharedCoverageConfig,
