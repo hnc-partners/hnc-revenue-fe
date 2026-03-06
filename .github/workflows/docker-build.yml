@@ -5,8 +5,138 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
-  build:
-    uses: hnc-partners/hnc-dev/.github/workflows/mf-docker-build.yml@main
-    secrets:
-      GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Create .npmrc for build
+        run: |
+          echo "@hnc-partners:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PACKAGES_TOKEN }}" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Validate singleton versions
+        run: |
+          # Fetch singleton manifest from shell repo (source of truth)
+          curl -sf \
+            -H "Authorization: token ${{ secrets.GH_PACKAGES_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3.raw" \
+            "https://api.github.com/repos/hnc-partners/hnc-shell/contents/singleton-manifest.json?ref=main" \
+            -o /tmp/singleton-manifest.json
+          echo "Shell singleton versions:"
+          jq '.singletons' /tmp/singleton-manifest.json
+          echo ""
+          FAIL=0
+          for pkg in $(jq -r '.singletons | keys[]' /tmp/singleton-manifest.json); do
+            expected=$(jq -r --arg p "$pkg" '.singletons[$p]' /tmp/singleton-manifest.json)
+            actual=$(jq -r --arg p "$pkg" '.dependencies[$p] // .devDependencies[$p] // "NOT_USED"' package.json)
+            if [ "$actual" = "NOT_USED" ]; then
+              continue
+            fi
+            if [ "$actual" != "$expected" ]; then
+              echo "MISMATCH: $pkg — expected $expected, got $actual"
+              FAIL=1
+            else
+              echo "OK: $pkg = $actual"
+            fi
+          done
+          if [ $FAIL -ne 0 ]; then
+            echo ""
+            echo "Singleton version mismatch! Run sync-fe-singletons.sh to update."
+            exit 1
+          fi
+          echo ""
+          echo "All singleton versions match shell."
+
+      - name: Build app
+        env:
+          VITE_BUILD_COMMIT: ${{ github.sha }}
+          VITE_BUILD_DATE: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at || '' }}
+          VITE_BUILD_RUN: ${{ github.run_number }}
+        run: pnpm build
+
+      - name: Generate build info
+        run: |
+          BUILD_DATE="${{ github.event.head_commit.timestamp || '' }}"
+          [ -z "$BUILD_DATE" ] && BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          cat > dist/build-info.json << EOF
+          {
+            "commit": "${{ github.sha }}",
+            "shortCommit": "$(echo '${{ github.sha }}' | cut -c1-7)",
+            "date": "$BUILD_DATE",
+            "run": ${{ github.run_number }},
+            "ref": "${{ github.ref_name }}"
+          }
+          EOF
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: false
+          build-args: |
+            BUILD_COMMIT=${{ github.sha }}
+
+  cleanup:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      packages: write
+
+    steps:
+      - name: Delete old package versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ github.event.repository.name }}
+          package-type: container
+          min-versions-to-keep: 5
+          delete-only-untagged-versions: true
