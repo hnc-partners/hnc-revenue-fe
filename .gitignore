@@ -32,3 +32,19 @@ Thumbs.db
 *.log
 npm-debug.log*
 pnpm-debug.log*
+
+# Local symlinks to microservices repo
+# .claude — commands tracked, settings ignored
+.claude/settings*
+_bmad/
+.__mf__temp/
+
+# Local workspace overrides
+pnpm-workspace.yaml
+
+# Env files (non-local)
+.env.development
+.env.production
+
+# Test coverage
+coverage/

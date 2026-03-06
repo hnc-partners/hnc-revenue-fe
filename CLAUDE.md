@@ -1,75 +1,35 @@
-# HNC Frontend Template
+# HNC Revenue Frontend
 
-Starter template for HNC micro-frontends. Clone this repo and customize for your specific service.
+Multi-feature micro-frontend for revenue management — statements, imports, and commissions.
 
 ## Quick Reference
 
 | Aspect | Value |
 |--------|-------|
-| **Type** | MF Remote Template |
-| **Runtime** | Vite 6 + React 19 + TypeScript |
-| **Framework** | React + TypeScript + TanStack |
-| **Dev Port** | 5173 (default Vite - reassign per port-registry.md) |
-| **Accent Color** | Placeholder - customize per service |
-| **API Backend** | Configure via VITE_API_TARGET |
-| **MF Plugin** | @module-federation/vite ^1.3.0 |
-
-## Structure
-
-```
-src/
-├── main.tsx              # Application entry point
-├── App.tsx               # Root component with router
-├── index.css             # Tailwind components + utilities (no :root, no @tailwind base)
-├── routes/               # TanStack Router file-based routes
-│   ├── __root.tsx        # Root layout
-│   ├── index.tsx         # Dashboard/home
-│   └── login.tsx         # Login page
-├── components/           # Shared components (app-level)
-│   ├── AppHeader.tsx     # Application header
-│   ├── Layout.tsx        # Page layout
-│   └── ProtectedRoute.tsx
-├── contexts/             # React contexts
-│   └── AuthContext.tsx   # Authentication state
-├── hooks/                # Custom hooks
-│   └── useAuth.ts        # Auth hook
-├── lib/                  # Utilities
-│   ├── api.ts            # API client
-│   └── utils.ts          # Utility functions (cn helper)
-└── types/                # TypeScript types
-    └── auth.ts           # Auth types
-```
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| **Routing** | TanStack Router ^1.157.15 (file-based) |
-| **Data Fetching** | TanStack Query ^5.62.16 |
-| **Forms** | React Hook Form ^7.71.1 + Zod ^3.24.1 + @hookform/resolvers ^5.2.2 |
-| **Styling** | Tailwind CSS ^3.4.17 + tailwindcss-animate ^1.0.7 |
-| **UI Components** | @hnc-partners/ui-components ^0.2.36 |
-| **MF Federation** | @module-federation/vite ^1.3.0 |
-| **CSS Bundling** | vite-plugin-css-injected-by-js (remotes only) |
-| **Build** | Vite ^6.0.6 + TypeScript ^5.7.2 |
-
-## Commands
-
-```bash
-pnpm dev          # Start development server
-pnpm build        # Build for production
-pnpm preview      # Preview production build
-pnpm typecheck    # TypeScript type checking
-pnpm lint         # ESLint
-```
+| **Type** | MF Remote |
+| **Dev Port** | 5177 |
+| **Accent Color** | TBD (assigned during shell integration) |
+| **Backend APIs** | revenue (3106) + report-management (3107) |
+| **MF Plugin** | @module-federation/vite |
+| **MF Name** | `revenue` |
 
 ## Module Federation
 
-### MF Config (in vite.config.ts)
+### Exposed Modules
 
-- **Name**: `SERVICE_NAME` (replace with your MF name)
+```typescript
+// vite.config.ts exposes:
+exposes: {
+  './App': './src/App.tsx',
+  './RevenuePage': './src/features/revenue/components/RevenuePage.tsx',
+}
+```
+
+### MF Config
+
+- **Name**: `revenue`
 - **Filename**: `remoteEntry.js`
-- **Base URL (prod)**: `https://hncms-SERVICE_NAME-fe.scarif-0.duckdns.org/`
+- **Base URL (prod)**: `https://hncms-revenue-fe.scarif-0.duckdns.org/`
 - **Shared**: react, react-dom, @tanstack/react-query, @hnc-partners/auth-context (all singletons)
 - **Federation only in production** - dev mode runs standalone
 
@@ -77,158 +37,108 @@ pnpm lint         # ESLint
 
 Uses `vite-plugin-css-injected-by-js` to bundle CSS into remoteEntry.js for MF compatibility.
 
-## Customizing for Your Service
+## Dual-Service Architecture
 
-When using this template for a new frontend:
+This MF is unique — it talks to TWO backend services:
 
-1. **Update package.json**: Change `name` to `@hnc-partners/{service}-fe`
-2. **Update vite.config.ts**: Replace `SERVICE_NAME` with your MF name, set correct port
-3. **Set accent color**: Shell provides `--mf-accent` via `[data-mf="your-service"]` -- no :root CSS needed
-4. **Configure API**: Set `VITE_API_TARGET` in `.env.example` and `.env.local`
-5. **Update this CLAUDE.md**: Replace template descriptions with service-specific info
-6. **Add feature folders**: Create `src/features/{your-feature}/` for domain logic
-7. **Expose MF components**: Add to `exposes` in vite.config.ts federation config
+| Service | Proxy Path | Features |
+|---------|-----------|----------|
+| revenue (3106) | `/revenue-api` | F30 (Imports), F21 (Commissions) |
+| report-management (3107) | `/report-management-api` | F54 (Statements) |
 
 ## Accent Color (MF Identity)
 
-Shell provides `--mf-accent` via `[data-mf="your-service"]` scoped CSS vars in `shell/src/index.css`. This MF does NOT define `:root` CSS variables (PLAN-050).
+Shell provides `--mf-accent` via `[data-mf="revenue"]` scoped CSS vars. The tailwind config maps this to `mf-accent` utility classes.
 
-Use `text-mf-accent`, `bg-mf-accent/10` -- NOT hardcoded Tailwind colors.
+Use `text-mf-accent`, `bg-mf-accent/10` - NOT hardcoded Tailwind colors.
 
-### Accent Colors by Service
+No `:root` CSS vars in this MF - shell owns all theme variables (PLAN-050).
 
-| Service | Color | Hex |
-|---------|-------|-----|
-| Labels | Steel Blue | #456882 |
-| Brands | Violet | #8b5cf6 |
-| Contacts | Teal | #14b8a6 |
-| Deals | Amber | #f59e0b |
-| Gaming Accounts | Indigo | #6366f1 |
-| Auth | Steel Blue | #456882 |
+## Commands
 
-## Tailwind Config (PLAN-049 Standard)
-
-The `tailwind.config.js` follows the PLAN-049 standard:
-
-- **ESM format** (`export default`)
-- **tailwindcss-animate** plugin (required for shadcn/ui animations)
-- **@hnc-partners/ui-components** in content paths (required for class scanning)
-- **mf-accent** color token mapped to `hsl(var(--mf-accent))`
-- **shadow-panel** custom shadow via `var(--shadow-panel)`
-- **HNC semantic tokens**: brand, success, warning, info (all via CSS vars)
-- **No :root CSS** in this MF -- shell owns all theme variables (PLAN-050)
-
-### CSS Rules for MFs
-
-- `index.css` uses ONLY `@tailwind components` and `@tailwind utilities`
-- NO `@tailwind base` -- shell owns base styles
-- NO `:root` CSS variables -- shell owns all theme vars
+```bash
+pnpm dev          # Start dev server (port 5177)
+pnpm build        # Build for production
+pnpm typecheck    # TypeScript checking
+pnpm lint         # ESLint checking
+```
 
 ## Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `VITE_API_TARGET` | Proxy target for `/api` (defaults to deployed URL) |
-| `VITE_AUTH_URL` | Auth service URL for token refresh |
-| `VITE_APP_NAME` | Application display name |
-| `VITE_MOCK_AUTH` | Enable mock auth for standalone dev (`true`/`false`) |
+| Variable | Description | Used In |
+|----------|-------------|---------|
+| `VITE_MOCK_AUTH` | Enable mock auth for standalone dev (`true`/`false`) | `src/main.tsx` |
+| `VITE_AUTH_URL` | Auth API endpoint for token refresh | `src/main.tsx` |
+| `VITE_REVENUE_API_URL` | Revenue backend URL (production) | `src/features/revenue/api/config.ts` |
+| `VITE_REPORT_MANAGEMENT_API_URL` | Report Management backend URL (production) | `src/features/revenue/api/config.ts` |
 
-## API Integration
+**Note**: In dev mode, Vite proxies are used instead of direct API URLs (`/revenue-api`, `/report-management-api`).
 
-### Query Pattern
+## Project Structure
 
-```tsx
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/lib/api';
-
-export function useItems() {
-  return useQuery({
-    queryKey: ['items'],
-    queryFn: () => api.get('/items').then(r => r.data),
-  });
-}
+```
+src/
+  App.tsx                 # Root app component (MF compatibility)
+  main.tsx                # Entry point (mock auth, QueryClient)
+  index.css               # Tailwind components + utilities
+  routeTree.gen.ts        # TanStack Router generated tree
+  vite-env.d.ts           # Vite env type declarations
+  features/
+    revenue/
+      api/
+        config.ts          # API URL configuration (dual-service)
+        apiFetch.ts        # Fetch wrapper with auth
+        index.ts           # API barrel export
+      components/
+        PlaceholderPage.tsx # Reusable placeholder component
+        RevenueLayout.tsx   # Tab layout wrapper (3 tabs)
+        RevenuePage.tsx     # Exposed MF component
+        statements/         # F54 placeholder components
+        imports/            # F30 placeholder components
+        commissions/        # F21 placeholder components
+  lib/                     # Shared utilities
+  routes/
+    __root.tsx             # Root route
+    index.tsx              # Index redirect
+    revenue.tsx            # Revenue layout route (tab navigation)
+    revenue/
+      index.tsx            # Revenue index redirect
+      coverage.tsx         # Coverage report
+      statements/          # F54 routes
+      imports/             # F30 routes
+      data/                # Revenue data browser routes
+      commissions/         # F21 routes
 ```
 
-### Mutation Pattern
+## Feature Mapping
 
-```tsx
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-export function useCreateItem() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (data) => api.post('/items', data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['items'] });
-    },
-  });
-}
-```
-
-## UI Components
-
-Import shared components from `@hnc-partners/ui-components`:
-
-```tsx
-import { Button, Card, Table } from '@hnc-partners/ui-components';
-```
-
-## Docker
-
-Build and deploy:
-```bash
-podman build -t hnc-fe-{service}:latest .
-podman run -d -p 8080:80 --name {service}-fe hnc-fe-{service}:latest
-```
+| Tab | Feature | Backend Service |
+|-----|---------|----------------|
+| Statements | F54 (Statement Automation) | report-management |
+| Imports | F30 (Revenue Import) | revenue |
+| Commissions | F21 (Commission Calculation) | revenue |
 
 ## Key Patterns
 
-### Feature Folders (Recommended)
-
-Organize by domain, not by type:
-```
-src/features/{service}/
-├── api/{service}-api.ts
-├── components/{Service}Page.tsx
-├── hooks/use-{service}.ts
-├── types/index.ts
-└── index.ts
-```
-
-### Form Validation (React Hook Form + Zod)
-
-```tsx
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-
-const schema = z.object({
-  name: z.string().min(1, 'Required'),
-});
-
-function MyForm() {
-  const form = useForm({
-    resolver: zodResolver(schema),
-  });
-  // ...
-}
-```
+- **Tabbed layout**: Statements/Imports/Commissions as top-level tabs
+- **Dual-service**: Fetches from revenue AND report-management APIs
+- **Nested routes**: Sub-routes within each tab (e.g., statements/gaps, commissions/summaries/by-brand)
+- **Placeholder scaffold**: All routes render placeholder cards — feature implementation follows
 
 ## Agents
 
 | Agent | When to Invoke |
 |-------|----------------|
-| **hnc-fe** | React patterns, components, TanStack usage |
-| **fe-master** | FE coordination, feature planning |
-| **hnc-be** | API contract questions |
-| **hnc-db** | Data model understanding |
+| **hnc-fe** | React patterns, component questions |
+| **fe-master** | Feature coordination |
+| **hnc-be** | Revenue or Report Management API contract |
 
-## Development Notes
+## Notes
 
-- **State**: Prefer TanStack Query for server state; use React state/context for UI state only
-- **Forms**: Use React Hook Form + Zod for type-safe validation
-- **Styling**: Use Tailwind utilities; avoid inline styles; use mf-accent for identity color
-- **Testing**: Colocate tests with features (`*.test.tsx` next to components)
-- **GitHub Packages**: Requires GITHUB_TOKEN for @hnc-partners/* packages (see README.md)
-- **Standalone dev**: Shows 401s for API data (no shell auth context) -- expected for layout verification
+- Part of HNC V3 micro-frontend architecture
+- Runs inside hnc-shell in production
+- Tailwind config is ESM (`tailwind.config.js`) with mf-accent mapped to `hsl(var(--mf-accent))`
+- CSS uses only `@tailwind components` and `@tailwind utilities` (no `@tailwind base` - shell owns base)
+- Dev proxy routes: `/revenue-api`, `/report-management-api`
+- Does NOT use TanStackRouterVite plugin in vite.config.ts (routeTree.gen.ts is manually maintained)
+- See `sidecars/hnc-fe/styling-guide.md` for MF CSS patterns

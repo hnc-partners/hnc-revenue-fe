@@ -1,3 +1,19 @@
 /* Shell owns @tailwind base - MFs only use components + utilities (PLAN-050) */
 @tailwind components;
 @tailwind utilities;
+
+/* No text selection anywhere — app is interactive UI, not a document (PLAN-064) */
+*,
+*::before,
+*::after {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Allow selection in form inputs */
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}

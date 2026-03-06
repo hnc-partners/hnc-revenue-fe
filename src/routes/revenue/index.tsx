@@ -1,11 +1,11 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 /**
- * Index Route
+ * Revenue Index Route
  *
- * Redirects root path to /revenue/statements (default tab).
+ * Redirects /revenue/ to /revenue/statements (default tab).
  */
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/revenue/')({
   beforeLoad: () => {
     throw redirect({ to: '/revenue/statements/' });
   },

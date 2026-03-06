@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import { federation } from '@module-federation/vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { resolve } from 'path';
@@ -8,35 +7,29 @@ import { createHncProxy, hncBuildConfig, HNC_SHARED_DEPS } from '@hnc-partners/v
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-// TODO: Replace with actual service name
-const SERVICE_NAME = 'SERVICE_NAME';
-const SERVICE_PORT = 5173; // TODO: Get from port-registry.md
-
 // https://vite.dev/config/
 export default defineConfig({
   // Production base URL for MF chunk resolution
   base: isProduction
-    ? `https://hncms-${SERVICE_NAME}-fe.scarif-0.duckdns.org/`
+    ? 'https://hncms-revenue-fe.scarif-0.duckdns.org/'
     : '/',
   plugins: [
-    TanStackRouterVite(),
     react(),
     // Only enable Module Federation for production builds
     // In dev mode, run as standalone app (faster, simpler)
     ...(isProduction ? [
       federation({
-        name: SERVICE_NAME,
+        name: 'revenue',
         filename: 'remoteEntry.js',
         exposes: {
           './App': './src/App.tsx',
-          // TODO: Add exposed components
+          './RevenuePage': './src/features/revenue/components/RevenuePage.tsx',
         },
         shared: HNC_SHARED_DEPS,
       }),
       // Inject CSS into remoteEntry.js for MF loading
       cssInjectedByJsPlugin({
-        jsAssetsFilterFunction: (outputChunk) =>
-          outputChunk.fileName === 'remoteEntry.js',
+        jsAssetsFilterFunction: (outputChunk) => outputChunk.fileName === 'remoteEntry.js',
       }),
     ] : []),
   ],
@@ -46,9 +39,10 @@ export default defineConfig({
     },
   },
   server: {
-    port: SERVICE_PORT,
+    port: 5177,
     host: true,
-    proxy: createHncProxy({ service: SERVICE_NAME as any }),
+    // Dual-service proxy: revenue (F30 + F21) + report-management (F54)
+    proxy: createHncProxy({ crossServices: ['revenue', 'report-management'] }),
   },
   build: hncBuildConfig(isProduction),
 });

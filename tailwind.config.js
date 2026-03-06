@@ -1,7 +1,7 @@
 /**
- * HNC MF Template Tailwind Config (PLAN-049/PLAN-050 Standard)
+ * HNC Revenue-FE Tailwind Config (PLAN-050 Migration)
  *
- * Shell owns :root theme vars -- this MF just references them.
+ * Shell owns :root theme vars — this MF just references them.
  * Based on: docs/design/mf-tailwind-config-template.js
  */
 
@@ -75,7 +75,7 @@ export default {
           foreground: 'hsl(var(--info-foreground))',
         },
 
-        // --- MF identity color (shell provides values via [data-mf="SERVICE_NAME"]) ---
+        // --- MF identity color (shell provides values via [data-mf="revenue"]) ---
         'mf-accent': {
           DEFAULT: 'hsl(var(--mf-accent))',
           foreground: 'hsl(var(--mf-accent-foreground))',
