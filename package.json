@@ -17,7 +17,7 @@
     "@hnc-partners/api-client": "^0.1.0",
     "@hnc-partners/auth-context": "0.1.3",
     "@hnc-partners/shared-types": "^0.1.0",
-    "@hnc-partners/ui-components": "^0.3.12",
+    "@hnc-partners/ui-components": "^0.3.17",
     "@hnc-partners/vite-config": "^0.1.0",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "5.90.21",
