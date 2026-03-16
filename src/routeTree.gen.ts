@@ -15,6 +15,8 @@ import { Route as RevenueIndexRouteImport } from './routes/revenue/index'
 import { Route as RevenueStatementsRouteImport } from './routes/revenue/statements'
 import { Route as RevenueImportsRouteImport } from './routes/revenue/imports'
 import { Route as RevenueCommissionsRouteImport } from './routes/revenue/commissions'
+import { Route as RevenueStatementsIndexRouteImport } from './routes/revenue/statements/index'
+import { Route as RevenueStatementsBrandCodeRouteImport } from './routes/revenue/statements/$brandCode'
 
 const RevenueRoute = RevenueRouteImport.update({
   id: '/revenue',
@@ -46,21 +48,34 @@ const RevenueCommissionsRoute = RevenueCommissionsRouteImport.update({
   path: '/commissions',
   getParentRoute: () => RevenueRoute,
 } as any)
+const RevenueStatementsIndexRoute = RevenueStatementsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RevenueStatementsRoute,
+} as any)
+const RevenueStatementsBrandCodeRoute = RevenueStatementsBrandCodeRouteImport.update({
+  id: '/$brandCode',
+  path: '/$brandCode',
+  getParentRoute: () => RevenueStatementsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/revenue': typeof RevenueRouteWithChildren
   '/revenue/commissions': typeof RevenueCommissionsRoute
   '/revenue/imports': typeof RevenueImportsRoute
-  '/revenue/statements': typeof RevenueStatementsRoute
+  '/revenue/statements': typeof RevenueStatementsRouteWithChildren
   '/revenue/': typeof RevenueIndexRoute
+  '/revenue/statements/': typeof RevenueStatementsIndexRoute
+  '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/revenue/commissions': typeof RevenueCommissionsRoute
   '/revenue/imports': typeof RevenueImportsRoute
-  '/revenue/statements': typeof RevenueStatementsRoute
   '/revenue': typeof RevenueIndexRoute
+  '/revenue/statements': typeof RevenueStatementsIndexRoute
+  '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,8 +83,10 @@ export interface FileRoutesById {
   '/revenue': typeof RevenueRouteWithChildren
   '/revenue/commissions': typeof RevenueCommissionsRoute
   '/revenue/imports': typeof RevenueImportsRoute
-  '/revenue/statements': typeof RevenueStatementsRoute
+  '/revenue/statements': typeof RevenueStatementsRouteWithChildren
   '/revenue/': typeof RevenueIndexRoute
+  '/revenue/statements/': typeof RevenueStatementsIndexRoute
+  '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -80,13 +97,16 @@ export interface FileRouteTypes {
     | '/revenue/imports'
     | '/revenue/statements'
     | '/revenue/'
+    | '/revenue/statements/'
+    | '/revenue/statements/$brandCode'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/revenue/commissions'
     | '/revenue/imports'
-    | '/revenue/statements'
     | '/revenue'
+    | '/revenue/statements'
+    | '/revenue/statements/$brandCode'
   id:
     | '__root__'
     | '/'
@@ -95,6 +115,8 @@ export interface FileRouteTypes {
     | '/revenue/imports'
     | '/revenue/statements'
     | '/revenue/'
+    | '/revenue/statements/'
+    | '/revenue/statements/$brandCode'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -146,20 +168,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevenueCommissionsRouteImport
       parentRoute: typeof RevenueRoute
     }
+    '/revenue/statements/': {
+      id: '/revenue/statements/'
+      path: '/'
+      fullPath: '/revenue/statements/'
+      preLoaderRoute: typeof RevenueStatementsIndexRouteImport
+      parentRoute: typeof RevenueStatementsRoute
+    }
+    '/revenue/statements/$brandCode': {
+      id: '/revenue/statements/$brandCode'
+      path: '/$brandCode'
+      fullPath: '/revenue/statements/$brandCode'
+      preLoaderRoute: typeof RevenueStatementsBrandCodeRouteImport
+      parentRoute: typeof RevenueStatementsRoute
+    }
   }
 }
+
+interface RevenueStatementsRouteChildren {
+  RevenueStatementsIndexRoute: typeof RevenueStatementsIndexRoute
+  RevenueStatementsBrandCodeRoute: typeof RevenueStatementsBrandCodeRoute
+}
+
+const RevenueStatementsRouteChildren: RevenueStatementsRouteChildren = {
+  RevenueStatementsIndexRoute: RevenueStatementsIndexRoute,
+  RevenueStatementsBrandCodeRoute: RevenueStatementsBrandCodeRoute,
+}
+
+const RevenueStatementsRouteWithChildren = RevenueStatementsRoute._addFileChildren(RevenueStatementsRouteChildren)
 
 interface RevenueRouteChildren {
   RevenueCommissionsRoute: typeof RevenueCommissionsRoute
   RevenueImportsRoute: typeof RevenueImportsRoute
-  RevenueStatementsRoute: typeof RevenueStatementsRoute
+  RevenueStatementsRoute: typeof RevenueStatementsRouteWithChildren
   RevenueIndexRoute: typeof RevenueIndexRoute
 }
 
 const RevenueRouteChildren: RevenueRouteChildren = {
   RevenueCommissionsRoute: RevenueCommissionsRoute,
   RevenueImportsRoute: RevenueImportsRoute,
-  RevenueStatementsRoute: RevenueStatementsRoute,
+  RevenueStatementsRoute: RevenueStatementsRouteWithChildren,
   RevenueIndexRoute: RevenueIndexRoute,
 }
 
