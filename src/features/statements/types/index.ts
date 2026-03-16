@@ -153,3 +153,85 @@ export interface PaginatedMeta {
   total: number;
   totalPages: number;
 }
+
+/**
+ * Recent run entry within brand config with activity.
+ */
+export interface RecentRun {
+  id: string;
+  status: string;
+  periodStart: string;
+  periodEnd: string;
+  sourceType: string;
+  createdAt: string;
+}
+
+/**
+ * Brand configuration with recent activity (from GET /brands/:code).
+ */
+export interface RMBrandConfigWithActivity {
+  id: string;
+  brandId: string;
+  brandCode: string;
+  brandName: string;
+  acquisitionMode: AcquisitionMode;
+  granularity: StatementGranularity;
+  scheduleCron: string | null;
+  requiredFileTypes: string[];
+  optionalFileTypes: string[];
+  shareTypes: ShareType[];
+  currencyCode: string;
+  portalUrl: string | null;
+  credentialsEnv: string | null;
+  maxBackfillMonths: number;
+  enabled: boolean;
+  paused: boolean;
+  autoNotify: boolean;
+  createdAt: string;
+  updatedAt: string;
+  recentRuns: RecentRun[];
+}
+
+/**
+ * DTO for creating a new brand configuration.
+ * POST /brands
+ */
+export interface RMCreateBrandConfigDto {
+  brandId: string;
+  brandCode: string;
+  brandName: string;
+  acquisitionMode: AcquisitionMode;
+  granularity: StatementGranularity;
+  scheduleCron?: string | null;
+  requiredFileTypes?: string[];
+  optionalFileTypes?: string[];
+  shareTypes?: ShareType[];
+  currencyCode?: string;
+  portalUrl?: string | null;
+  credentialsEnv?: string | null;
+  maxBackfillMonths?: number;
+  enabled?: boolean;
+  paused?: boolean;
+  autoNotify?: boolean;
+}
+
+/**
+ * DTO for updating an existing brand configuration.
+ * PATCH /brands/:code — brandCode is immutable.
+ */
+export interface RMUpdateBrandConfigDto {
+  brandName?: string;
+  acquisitionMode?: AcquisitionMode;
+  granularity?: StatementGranularity;
+  scheduleCron?: string | null;
+  requiredFileTypes?: string[];
+  optionalFileTypes?: string[];
+  shareTypes?: ShareType[];
+  currencyCode?: string;
+  portalUrl?: string | null;
+  credentialsEnv?: string | null;
+  maxBackfillMonths?: number;
+  enabled?: boolean;
+  paused?: boolean;
+  autoNotify?: boolean;
+}

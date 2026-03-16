@@ -17,6 +17,8 @@ import { Route as RevenueImportsRouteImport } from './routes/revenue/imports'
 import { Route as RevenueCommissionsRouteImport } from './routes/revenue/commissions'
 import { Route as RevenueStatementsIndexRouteImport } from './routes/revenue/statements/index'
 import { Route as RevenueStatementsBrandCodeRouteImport } from './routes/revenue/statements/$brandCode'
+import { Route as RevenueStatementsConfigNewRouteImport } from './routes/revenue/statements/config/new'
+import { Route as RevenueStatementsConfigBrandCodeRouteImport } from './routes/revenue/statements/config/$brandCode'
 
 const RevenueRoute = RevenueRouteImport.update({
   id: '/revenue',
@@ -58,6 +60,16 @@ const RevenueStatementsBrandCodeRoute = RevenueStatementsBrandCodeRouteImport.up
   path: '/$brandCode',
   getParentRoute: () => RevenueStatementsRoute,
 } as any)
+const RevenueStatementsConfigNewRoute = RevenueStatementsConfigNewRouteImport.update({
+  id: '/config/new',
+  path: '/config/new',
+  getParentRoute: () => RevenueStatementsRoute,
+} as any)
+const RevenueStatementsConfigBrandCodeRoute = RevenueStatementsConfigBrandCodeRouteImport.update({
+  id: '/config/$brandCode',
+  path: '/config/$brandCode',
+  getParentRoute: () => RevenueStatementsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +80,8 @@ export interface FileRoutesByFullPath {
   '/revenue/': typeof RevenueIndexRoute
   '/revenue/statements/': typeof RevenueStatementsIndexRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
+  '/revenue/statements/config/new': typeof RevenueStatementsConfigNewRoute
+  '/revenue/statements/config/$brandCode': typeof RevenueStatementsConfigBrandCodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,6 +90,8 @@ export interface FileRoutesByTo {
   '/revenue': typeof RevenueIndexRoute
   '/revenue/statements': typeof RevenueStatementsIndexRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
+  '/revenue/statements/config/new': typeof RevenueStatementsConfigNewRoute
+  '/revenue/statements/config/$brandCode': typeof RevenueStatementsConfigBrandCodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -87,6 +103,8 @@ export interface FileRoutesById {
   '/revenue/': typeof RevenueIndexRoute
   '/revenue/statements/': typeof RevenueStatementsIndexRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
+  '/revenue/statements/config/new': typeof RevenueStatementsConfigNewRoute
+  '/revenue/statements/config/$brandCode': typeof RevenueStatementsConfigBrandCodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,6 +117,8 @@ export interface FileRouteTypes {
     | '/revenue/'
     | '/revenue/statements/'
     | '/revenue/statements/$brandCode'
+    | '/revenue/statements/config/new'
+    | '/revenue/statements/config/$brandCode'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -107,6 +127,8 @@ export interface FileRouteTypes {
     | '/revenue'
     | '/revenue/statements'
     | '/revenue/statements/$brandCode'
+    | '/revenue/statements/config/new'
+    | '/revenue/statements/config/$brandCode'
   id:
     | '__root__'
     | '/'
@@ -117,6 +139,8 @@ export interface FileRouteTypes {
     | '/revenue/'
     | '/revenue/statements/'
     | '/revenue/statements/$brandCode'
+    | '/revenue/statements/config/new'
+    | '/revenue/statements/config/$brandCode'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -182,17 +206,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevenueStatementsBrandCodeRouteImport
       parentRoute: typeof RevenueStatementsRoute
     }
+    '/revenue/statements/config/new': {
+      id: '/revenue/statements/config/new'
+      path: '/config/new'
+      fullPath: '/revenue/statements/config/new'
+      preLoaderRoute: typeof RevenueStatementsConfigNewRouteImport
+      parentRoute: typeof RevenueStatementsRoute
+    }
+    '/revenue/statements/config/$brandCode': {
+      id: '/revenue/statements/config/$brandCode'
+      path: '/config/$brandCode'
+      fullPath: '/revenue/statements/config/$brandCode'
+      preLoaderRoute: typeof RevenueStatementsConfigBrandCodeRouteImport
+      parentRoute: typeof RevenueStatementsRoute
+    }
   }
 }
 
 interface RevenueStatementsRouteChildren {
   RevenueStatementsIndexRoute: typeof RevenueStatementsIndexRoute
   RevenueStatementsBrandCodeRoute: typeof RevenueStatementsBrandCodeRoute
+  RevenueStatementsConfigNewRoute: typeof RevenueStatementsConfigNewRoute
+  RevenueStatementsConfigBrandCodeRoute: typeof RevenueStatementsConfigBrandCodeRoute
 }
 
 const RevenueStatementsRouteChildren: RevenueStatementsRouteChildren = {
   RevenueStatementsIndexRoute: RevenueStatementsIndexRoute,
   RevenueStatementsBrandCodeRoute: RevenueStatementsBrandCodeRoute,
+  RevenueStatementsConfigNewRoute: RevenueStatementsConfigNewRoute,
+  RevenueStatementsConfigBrandCodeRoute: RevenueStatementsConfigBrandCodeRoute,
 }
 
 const RevenueStatementsRouteWithChildren = RevenueStatementsRoute._addFileChildren(RevenueStatementsRouteChildren)

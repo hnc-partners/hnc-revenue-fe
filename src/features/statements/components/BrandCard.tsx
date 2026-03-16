@@ -6,7 +6,8 @@
  */
 
 import { useNavigate } from '@tanstack/react-router';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, Settings } from 'lucide-react';
+import { Button } from '@hnc-partners/ui-components';
 import { cn } from '@/lib/utils';
 import type { RMBrandConfigWithStatus } from '../types';
 import { BrandStatusIndicator } from './BrandStatusIndicator';
@@ -93,7 +94,24 @@ export function BrandCard({ brand }: BrandCardProps) {
           <span className="text-xs text-muted-foreground">
             {formatGranularity(brand.granularity)}
           </span>
-          <BrandStatusIndicator health={health} showLabel />
+          <div className="flex items-center gap-2">
+            <BrandStatusIndicator health={health} showLabel />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate({
+                  to: '/revenue/statements/config/$brandCode',
+                  params: { brandCode: brand.brandCode },
+                });
+              }}
+              aria-label={`Configure ${brand.brandName}`}
+            >
+              <Settings className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
       </div>
     </button>

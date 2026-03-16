@@ -8,3 +8,11 @@ export {
   useResumeService,
   serviceStatusQueryKey,
 } from './useServiceStatus';
+export {
+  useBrandConfig,
+  useCreateBrand,
+  useUpdateBrand,
+  useEnableBrand,
+  useDisableBrand,
+  brandConfigQueryKey,
+} from './useBrandConfig';

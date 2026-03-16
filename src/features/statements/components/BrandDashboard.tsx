@@ -5,8 +5,9 @@
  * Includes global service status indicator and pause/resume controls.
  */
 
+import { Link } from '@tanstack/react-router';
 import { Button, Skeleton } from '@hnc-partners/ui-components';
-import { FileText } from 'lucide-react';
+import { FileText, Plus } from 'lucide-react';
 import { useStatementBrands } from '../api';
 import { ServiceStatusBar } from './ServiceStatusBar';
 import { BrandCard } from './BrandCard';
@@ -90,7 +91,15 @@ export function BrandDashboard() {
       <div className="px-4 sm:px-6 lg:px-8 pt-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
           <h1 className="text-xl font-semibold text-foreground">Statements</h1>
-          <ServiceStatusBar />
+          <div className="flex items-center gap-3">
+            <ServiceStatusBar />
+            <Link to="/revenue/statements/config/new">
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                New Brand
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
