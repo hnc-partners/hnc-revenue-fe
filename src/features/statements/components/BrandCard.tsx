@@ -15,6 +15,8 @@ import { AcquisitionModeBadge } from './AcquisitionModeBadge';
 
 interface BrandCardProps {
   brand: RMBrandConfigWithStatus;
+  /** Called when the settings/gear icon is clicked (opens edit dialog) */
+  onEditConfig?: (brandCode: string) => void;
 }
 
 function formatDate(isoString: string | null): string {
@@ -32,7 +34,7 @@ function formatGranularity(g: string): string {
   return g.charAt(0).toUpperCase() + g.slice(1);
 }
 
-export function BrandCard({ brand }: BrandCardProps) {
+export function BrandCard({ brand, onEditConfig }: BrandCardProps) {
   const navigate = useNavigate();
   const isDisabled = !brand.enabled;
   const health = isDisabled ? 'unknown' as const : brand.health;
@@ -102,10 +104,7 @@ export function BrandCard({ brand }: BrandCardProps) {
               className="h-6 w-6"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate({
-                  to: '/revenue/statements/config/$brandCode',
-                  params: { brandCode: brand.brandCode },
-                });
+                onEditConfig?.(brand.brandCode);
               }}
               aria-label={`Configure ${brand.brandName}`}
             >

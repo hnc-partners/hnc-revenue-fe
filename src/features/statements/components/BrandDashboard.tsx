@@ -3,14 +3,16 @@
  *
  * Main statement management dashboard showing brand cards in a responsive grid.
  * Includes global service status indicator and pause/resume controls.
+ * Brand config create/edit is handled via dialog (no route navigation).
  */
 
-import { Link } from '@tanstack/react-router';
+import { useState } from 'react';
 import { Button, Skeleton } from '@hnc-partners/ui-components';
 import { FileText, Plus } from 'lucide-react';
 import { useStatementBrands } from '../api';
 import { ServiceStatusBar } from './ServiceStatusBar';
 import { BrandCard } from './BrandCard';
+import { BrandConfigDialog } from './BrandConfigDialog';
 
 function DashboardSkeleton() {
   return (
@@ -66,6 +68,16 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
 export function BrandDashboard() {
   const { data: brands, isLoading, error, refetch } = useStatementBrands();
 
+  // Dialog state: null = closed, undefined = create mode, string = edit mode (brandCode)
+  const [editingBrandCode, setEditingBrandCode] = useState<string | null>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const handleOpenCreate = () => setIsCreateOpen(true);
+  const handleCloseCreate = () => setIsCreateOpen(false);
+
+  const handleOpenEdit = (brandCode: string) => setEditingBrandCode(brandCode);
+  const handleCloseEdit = () => setEditingBrandCode(null);
+
   if (isLoading) {
     return (
       <div className="px-4 sm:px-6 lg:px-8 py-6">
@@ -93,12 +105,10 @@ export function BrandDashboard() {
           <h1 className="text-xl font-semibold text-foreground">Statements</h1>
           <div className="flex items-center gap-3">
             <ServiceStatusBar />
-            <Link to="/revenue/statements/config/new">
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                New Brand
-              </Button>
-            </Link>
+            <Button onClick={handleOpenCreate}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Brand
+            </Button>
           </div>
         </div>
       </div>
@@ -110,11 +120,31 @@ export function BrandDashboard() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {brands.map((brand) => (
-              <BrandCard key={brand.brandCode} brand={brand} />
+              <BrandCard
+                key={brand.brandCode}
+                brand={brand}
+                onEditConfig={handleOpenEdit}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {/* Create dialog */}
+      <BrandConfigDialog
+        isOpen={isCreateOpen}
+        onClose={handleCloseCreate}
+      />
+
+      {/* Edit dialog (single instance, keyed by brandCode for re-mount) */}
+      {editingBrandCode && (
+        <BrandConfigDialog
+          key={editingBrandCode}
+          isOpen
+          onClose={handleCloseEdit}
+          brandCode={editingBrandCode}
+        />
+      )}
     </div>
   );
 }

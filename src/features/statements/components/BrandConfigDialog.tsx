@@ -1,16 +1,17 @@
 /**
- * BrandConfigPage.tsx
+ * BrandConfigDialog.tsx
  *
- * Page wrapper for brand configuration create/edit.
- * Loads brand data for edit mode, shows breadcrumb back to dashboard.
+ * Dialog/modal wrapper for brand configuration create/edit.
+ * Replaces BrandConfigPage — keeps operator on the dashboard.
  */
 
-import { useNavigate } from '@tanstack/react-router';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
 import {
-  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   Skeleton,
+  Button,
   toast,
   TOAST_MESSAGES,
 } from '@hnc-partners/ui-components';
@@ -27,13 +28,17 @@ import type { RMCreateBrandConfigDto, RMUpdateBrandConfigDto } from '../types';
 // Props
 // ---------------------------------------------------------------------------
 
-interface BrandConfigPageProps {
-  /** Brand code for edit mode; undefined for create mode */
+interface BrandConfigDialogProps {
+  /** Whether the dialog is open */
+  isOpen: boolean;
+  /** Called to close the dialog */
+  onClose: () => void;
+  /** Brand code for edit mode; undefined/absent for create mode */
   brandCode?: string;
 }
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Helpers (migrated from BrandConfigPage)
 // ---------------------------------------------------------------------------
 
 function toCreateDto(data: BrandConfigFormData): RMCreateBrandConfigDto {
@@ -75,12 +80,12 @@ function toUpdateDto(data: BrandConfigFormData): RMUpdateBrandConfigDto {
 }
 
 // ---------------------------------------------------------------------------
-// Loading skeleton
+// Loading skeleton for dialog content
 // ---------------------------------------------------------------------------
 
 function FormSkeleton() {
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6">
       <Skeleton className="h-6 w-40" />
       <div className="space-y-4">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -98,8 +103,7 @@ function FormSkeleton() {
 // Component
 // ---------------------------------------------------------------------------
 
-export function BrandConfigPage({ brandCode }: BrandConfigPageProps) {
-  const navigate = useNavigate();
+export function BrandConfigDialog({ isOpen, onClose, brandCode }: BrandConfigDialogProps) {
   const isEdit = !!brandCode;
 
   // Fetch existing brand config for edit mode
@@ -120,7 +124,7 @@ export function BrandConfigPage({ brandCode }: BrandConfigPageProps) {
       updateMutation.mutate(toUpdateDto(data), {
         onSuccess: () => {
           toast.success(TOAST_MESSAGES.UPDATE_SUCCESS('Brand config'));
-          navigate({ to: '/revenue/statements' });
+          onClose();
         },
         onError: (err: Error) => {
           toast.error(TOAST_MESSAGES.UPDATE_ERROR('brand config', err.message));
@@ -130,7 +134,7 @@ export function BrandConfigPage({ brandCode }: BrandConfigPageProps) {
       createMutation.mutate(toCreateDto(data), {
         onSuccess: () => {
           toast.success(TOAST_MESSAGES.CREATE_SUCCESS('Brand config'));
-          navigate({ to: '/revenue/statements' });
+          onClose();
         },
         onError: (err: Error) => {
           const message = err.message;
@@ -144,89 +148,49 @@ export function BrandConfigPage({ brandCode }: BrandConfigPageProps) {
     }
   };
 
-  const handleCancel = () => {
-    navigate({ to: '/revenue/statements' });
-  };
+  // Determine dialog title
+  const title = isEdit
+    ? `Edit ${brand?.brandName ?? brandCode}`
+    : 'New Brand';
 
-  // Loading state (edit mode only)
+  // Render dialog content based on state
+  let content: React.ReactNode;
+
   if (isEdit && isLoading) {
-    return (
-      <div className="flex flex-col h-full w-full overflow-hidden">
-        <div className="px-4 sm:px-6 lg:px-8 pt-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Link to="/revenue/statements">
-              <Button variant="ghost" size="icon" aria-label="Back to dashboard">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Skeleton className="h-7 w-48" />
-          </div>
-        </div>
-        <div className="px-4 sm:px-6 lg:px-8 pb-6 overflow-y-auto flex-1">
-          <FormSkeleton />
-        </div>
+    content = <FormSkeleton />;
+  } else if (isEdit && error) {
+    content = (
+      <div className="flex flex-col items-center justify-center py-8 text-center">
+        <h3 className="text-lg font-medium text-foreground mb-1">
+          Something went wrong
+        </h3>
+        <p className="text-sm text-muted-foreground max-w-sm mb-4">
+          Could not load brand configuration. Please try again.
+        </p>
+        <Button variant="outline" onClick={() => refetch()}>
+          Try Again
+        </Button>
       </div>
     );
-  }
-
-  // Error state (edit mode only)
-  if (isEdit && error) {
-    return (
-      <div className="flex flex-col h-full w-full overflow-hidden">
-        <div className="px-4 sm:px-6 lg:px-8 pt-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Link to="/revenue/statements">
-              <Button variant="ghost" size="icon" aria-label="Back to dashboard">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
-            <h1 className="text-xl font-semibold text-foreground">Edit Brand</h1>
-          </div>
-        </div>
-        <div className="px-4 sm:px-6 lg:px-8 pb-6 overflow-y-auto flex-1">
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <h3 className="text-lg font-medium text-foreground mb-1">
-              Something went wrong
-            </h3>
-            <p className="text-sm text-muted-foreground max-w-sm mb-4">
-              Could not load brand configuration. Please try again.
-            </p>
-            <Button variant="outline" onClick={() => refetch()}>
-              Try Again
-            </Button>
-          </div>
-        </div>
-      </div>
+  } else {
+    content = (
+      <BrandConfigForm
+        brand={isEdit ? brand : undefined}
+        isSubmitting={isMutating}
+        onSubmit={handleSubmit}
+        onCancel={onClose}
+      />
     );
   }
 
   return (
-    <div className="flex flex-col h-full w-full overflow-hidden">
-      {/* Header */}
-      <div className="px-4 sm:px-6 lg:px-8 pt-6">
-        <div className="flex items-center gap-3 mb-4">
-          <Link to="/revenue/statements">
-            <Button variant="ghost" size="icon" aria-label="Back to dashboard">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-          <h1 className="text-xl font-semibold text-foreground">
-            {isEdit ? `Edit ${brand?.brandName ?? brandCode}` : 'New Brand'}
-          </h1>
-        </div>
-      </div>
-
-      {/* Form */}
-      <div className="px-4 sm:px-6 lg:px-8 pb-6 overflow-y-auto flex-1">
-        <div className="max-w-2xl">
-          <BrandConfigForm
-            brand={isEdit ? brand : undefined}
-            isSubmitting={isMutating}
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-          />
-        </div>
-      </div>
-    </div>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
+        {content}
+      </DialogContent>
+    </Dialog>
   );
 }

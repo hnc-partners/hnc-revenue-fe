@@ -7,7 +7,7 @@ export { BrandStatusIndicator } from './components/BrandStatusIndicator';
 export { AcquisitionModeBadge } from './components/AcquisitionModeBadge';
 export { ServiceStatusBar } from './components/ServiceStatusBar';
 export { BrandConfigForm } from './components/BrandConfigForm';
-export { BrandConfigPage } from './components/BrandConfigPage';
+export { BrandConfigDialog } from './components/BrandConfigDialog';
 export type {
   RMBrandConfigWithStatus,
   RMBrandConfigWithActivity,
