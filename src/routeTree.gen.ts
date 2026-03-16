@@ -12,258 +12,91 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RevenueRouteImport } from './routes/revenue'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RevenueIndexRouteImport } from './routes/revenue/index'
-import { Route as RevenueCoverageRouteImport } from './routes/revenue/coverage'
-import { Route as RevenueStatementsIndexRouteImport } from './routes/revenue/statements/index'
-import { Route as RevenueStatementsConfigRouteImport } from './routes/revenue/statements/config'
-import { Route as RevenueStatementsGapsRouteImport } from './routes/revenue/statements/gaps'
-import { Route as RevenueStatementsManualEntryRouteImport } from './routes/revenue/statements/manual-entry'
-import { Route as RevenueStatementsBrandCodeRouteImport } from './routes/revenue/statements/$brandCode'
-import { Route as RevenueImportsIndexRouteImport } from './routes/revenue/imports/index'
-import { Route as RevenueImportsNewRouteImport } from './routes/revenue/imports/new'
-import { Route as RevenueImportsBatchIdRouteImport } from './routes/revenue/imports/$batchId'
-import { Route as RevenueDataIndexRouteImport } from './routes/revenue/data/index'
-import { Route as RevenueDataByPlayerGamingAccountIdRouteImport } from './routes/revenue/data/by-player/$gamingAccountId'
-import { Route as RevenueCommissionsIndexRouteImport } from './routes/revenue/commissions/index'
-import { Route as RevenueCommissionsValidationRouteImport } from './routes/revenue/commissions/validation'
-import { Route as RevenueCommissionsSummariesIndexRouteImport } from './routes/revenue/commissions/summaries/index'
-import { Route as RevenueCommissionsSummariesByBrandRouteImport } from './routes/revenue/commissions/summaries/by-brand'
-import { Route as RevenueCommissionsSummariesByGaRouteImport } from './routes/revenue/commissions/summaries/by-ga'
+import { Route as RevenueStatementsRouteImport } from './routes/revenue/statements'
+import { Route as RevenueImportsRouteImport } from './routes/revenue/imports'
+import { Route as RevenueCommissionsRouteImport } from './routes/revenue/commissions'
 
-// Create child route updates
-const RevenueIndexRoute = RevenueIndexRouteImport.update({
-  id: '/revenue/',
-  path: '/',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueCoverageRoute = RevenueCoverageRouteImport.update({
-  id: '/revenue/coverage',
-  path: '/coverage',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueStatementsIndexRoute = RevenueStatementsIndexRouteImport.update({
-  id: '/revenue/statements/',
-  path: '/statements/',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueStatementsConfigRoute = RevenueStatementsConfigRouteImport.update({
-  id: '/revenue/statements/config',
-  path: '/statements/config',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueStatementsGapsRoute = RevenueStatementsGapsRouteImport.update({
-  id: '/revenue/statements/gaps',
-  path: '/statements/gaps',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueStatementsManualEntryRoute = RevenueStatementsManualEntryRouteImport.update({
-  id: '/revenue/statements/manual-entry',
-  path: '/statements/manual-entry',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueStatementsBrandCodeRoute = RevenueStatementsBrandCodeRouteImport.update({
-  id: '/revenue/statements/$brandCode',
-  path: '/statements/$brandCode',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueImportsIndexRoute = RevenueImportsIndexRouteImport.update({
-  id: '/revenue/imports/',
-  path: '/imports/',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueImportsNewRoute = RevenueImportsNewRouteImport.update({
-  id: '/revenue/imports/new',
-  path: '/imports/new',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueImportsBatchIdRoute = RevenueImportsBatchIdRouteImport.update({
-  id: '/revenue/imports/$batchId',
-  path: '/imports/$batchId',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueDataIndexRoute = RevenueDataIndexRouteImport.update({
-  id: '/revenue/data/',
-  path: '/data/',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueDataByPlayerGamingAccountIdRoute = RevenueDataByPlayerGamingAccountIdRouteImport.update({
-  id: '/revenue/data/by-player/$gamingAccountId',
-  path: '/data/by-player/$gamingAccountId',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueCommissionsIndexRoute = RevenueCommissionsIndexRouteImport.update({
-  id: '/revenue/commissions/',
-  path: '/commissions/',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueCommissionsValidationRoute = RevenueCommissionsValidationRouteImport.update({
-  id: '/revenue/commissions/validation',
-  path: '/commissions/validation',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueCommissionsSummariesIndexRoute = RevenueCommissionsSummariesIndexRouteImport.update({
-  id: '/revenue/commissions/summaries/',
-  path: '/commissions/summaries/',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueCommissionsSummariesByBrandRoute = RevenueCommissionsSummariesByBrandRouteImport.update({
-  id: '/revenue/commissions/summaries/by-brand',
-  path: '/commissions/summaries/by-brand',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-const RevenueCommissionsSummariesByGaRoute = RevenueCommissionsSummariesByGaRouteImport.update({
-  id: '/revenue/commissions/summaries/by-ga',
-  path: '/commissions/summaries/by-ga',
-  getParentRoute: () => RevenueRoute,
-} as any)
-
-// Create parent routes
 const RevenueRoute = RevenueRouteImport.update({
   id: '/revenue',
   path: '/revenue',
   getParentRoute: () => rootRouteImport,
 } as any)
-
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-
-// Define route children interface
-export interface RevenueRouteChildren {
-  RevenueIndexRoute: typeof RevenueIndexRoute
-  RevenueCoverageRoute: typeof RevenueCoverageRoute
-  RevenueStatementsIndexRoute: typeof RevenueStatementsIndexRoute
-  RevenueStatementsConfigRoute: typeof RevenueStatementsConfigRoute
-  RevenueStatementsGapsRoute: typeof RevenueStatementsGapsRoute
-  RevenueStatementsManualEntryRoute: typeof RevenueStatementsManualEntryRoute
-  RevenueStatementsBrandCodeRoute: typeof RevenueStatementsBrandCodeRoute
-  RevenueImportsIndexRoute: typeof RevenueImportsIndexRoute
-  RevenueImportsNewRoute: typeof RevenueImportsNewRoute
-  RevenueImportsBatchIdRoute: typeof RevenueImportsBatchIdRoute
-  RevenueDataIndexRoute: typeof RevenueDataIndexRoute
-  RevenueDataByPlayerGamingAccountIdRoute: typeof RevenueDataByPlayerGamingAccountIdRoute
-  RevenueCommissionsIndexRoute: typeof RevenueCommissionsIndexRoute
-  RevenueCommissionsValidationRoute: typeof RevenueCommissionsValidationRoute
-  RevenueCommissionsSummariesIndexRoute: typeof RevenueCommissionsSummariesIndexRoute
-  RevenueCommissionsSummariesByBrandRoute: typeof RevenueCommissionsSummariesByBrandRoute
-  RevenueCommissionsSummariesByGaRoute: typeof RevenueCommissionsSummariesByGaRoute
-}
-
-const revenueRouteChildren: RevenueRouteChildren = {
-  RevenueIndexRoute: RevenueIndexRoute,
-  RevenueCoverageRoute: RevenueCoverageRoute,
-  RevenueStatementsIndexRoute: RevenueStatementsIndexRoute,
-  RevenueStatementsConfigRoute: RevenueStatementsConfigRoute,
-  RevenueStatementsGapsRoute: RevenueStatementsGapsRoute,
-  RevenueStatementsManualEntryRoute: RevenueStatementsManualEntryRoute,
-  RevenueStatementsBrandCodeRoute: RevenueStatementsBrandCodeRoute,
-  RevenueImportsIndexRoute: RevenueImportsIndexRoute,
-  RevenueImportsNewRoute: RevenueImportsNewRoute,
-  RevenueImportsBatchIdRoute: RevenueImportsBatchIdRoute,
-  RevenueDataIndexRoute: RevenueDataIndexRoute,
-  RevenueDataByPlayerGamingAccountIdRoute: RevenueDataByPlayerGamingAccountIdRoute,
-  RevenueCommissionsIndexRoute: RevenueCommissionsIndexRoute,
-  RevenueCommissionsValidationRoute: RevenueCommissionsValidationRoute,
-  RevenueCommissionsSummariesIndexRoute: RevenueCommissionsSummariesIndexRoute,
-  RevenueCommissionsSummariesByBrandRoute: RevenueCommissionsSummariesByBrandRoute,
-  RevenueCommissionsSummariesByGaRoute: RevenueCommissionsSummariesByGaRoute,
-}
-
-const RevenueRouteWithChildren = RevenueRoute._addFileChildren(revenueRouteChildren)
+const RevenueIndexRoute = RevenueIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RevenueRoute,
+} as any)
+const RevenueStatementsRoute = RevenueStatementsRouteImport.update({
+  id: '/statements',
+  path: '/statements',
+  getParentRoute: () => RevenueRoute,
+} as any)
+const RevenueImportsRoute = RevenueImportsRouteImport.update({
+  id: '/imports',
+  path: '/imports',
+  getParentRoute: () => RevenueRoute,
+} as any)
+const RevenueCommissionsRoute = RevenueCommissionsRouteImport.update({
+  id: '/commissions',
+  path: '/commissions',
+  getParentRoute: () => RevenueRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/revenue': typeof RevenueRouteWithChildren
+  '/revenue/commissions': typeof RevenueCommissionsRoute
+  '/revenue/imports': typeof RevenueImportsRoute
+  '/revenue/statements': typeof RevenueStatementsRoute
   '/revenue/': typeof RevenueIndexRoute
-  '/revenue/coverage': typeof RevenueCoverageRoute
-  '/revenue/statements/': typeof RevenueStatementsIndexRoute
-  '/revenue/statements/config': typeof RevenueStatementsConfigRoute
-  '/revenue/statements/gaps': typeof RevenueStatementsGapsRoute
-  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
-  '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
-  '/revenue/imports/': typeof RevenueImportsIndexRoute
-  '/revenue/imports/new': typeof RevenueImportsNewRoute
-  '/revenue/imports/$batchId': typeof RevenueImportsBatchIdRoute
-  '/revenue/data/': typeof RevenueDataIndexRoute
-  '/revenue/data/by-player/$gamingAccountId': typeof RevenueDataByPlayerGamingAccountIdRoute
-  '/revenue/commissions/': typeof RevenueCommissionsIndexRoute
-  '/revenue/commissions/validation': typeof RevenueCommissionsValidationRoute
-  '/revenue/commissions/summaries/': typeof RevenueCommissionsSummariesIndexRoute
-  '/revenue/commissions/summaries/by-brand': typeof RevenueCommissionsSummariesByBrandRoute
-  '/revenue/commissions/summaries/by-ga': typeof RevenueCommissionsSummariesByGaRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/revenue': typeof RevenueRouteWithChildren
-  '/revenue/': typeof RevenueIndexRoute
-  '/revenue/coverage': typeof RevenueCoverageRoute
-  '/revenue/statements/': typeof RevenueStatementsIndexRoute
-  '/revenue/statements/config': typeof RevenueStatementsConfigRoute
-  '/revenue/statements/gaps': typeof RevenueStatementsGapsRoute
-  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
-  '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
-  '/revenue/imports/': typeof RevenueImportsIndexRoute
-  '/revenue/imports/new': typeof RevenueImportsNewRoute
-  '/revenue/imports/$batchId': typeof RevenueImportsBatchIdRoute
-  '/revenue/data/': typeof RevenueDataIndexRoute
-  '/revenue/data/by-player/$gamingAccountId': typeof RevenueDataByPlayerGamingAccountIdRoute
-  '/revenue/commissions/': typeof RevenueCommissionsIndexRoute
-  '/revenue/commissions/validation': typeof RevenueCommissionsValidationRoute
-  '/revenue/commissions/summaries/': typeof RevenueCommissionsSummariesIndexRoute
-  '/revenue/commissions/summaries/by-brand': typeof RevenueCommissionsSummariesByBrandRoute
-  '/revenue/commissions/summaries/by-ga': typeof RevenueCommissionsSummariesByGaRoute
+  '/revenue/commissions': typeof RevenueCommissionsRoute
+  '/revenue/imports': typeof RevenueImportsRoute
+  '/revenue/statements': typeof RevenueStatementsRoute
+  '/revenue': typeof RevenueIndexRoute
 }
-
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/revenue': typeof RevenueRouteWithChildren
+  '/revenue/commissions': typeof RevenueCommissionsRoute
+  '/revenue/imports': typeof RevenueImportsRoute
+  '/revenue/statements': typeof RevenueStatementsRoute
   '/revenue/': typeof RevenueIndexRoute
-  '/revenue/coverage': typeof RevenueCoverageRoute
-  '/revenue/statements/': typeof RevenueStatementsIndexRoute
-  '/revenue/statements/config': typeof RevenueStatementsConfigRoute
-  '/revenue/statements/gaps': typeof RevenueStatementsGapsRoute
-  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
-  '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
-  '/revenue/imports/': typeof RevenueImportsIndexRoute
-  '/revenue/imports/new': typeof RevenueImportsNewRoute
-  '/revenue/imports/$batchId': typeof RevenueImportsBatchIdRoute
-  '/revenue/data/': typeof RevenueDataIndexRoute
-  '/revenue/data/by-player/$gamingAccountId': typeof RevenueDataByPlayerGamingAccountIdRoute
-  '/revenue/commissions/': typeof RevenueCommissionsIndexRoute
-  '/revenue/commissions/validation': typeof RevenueCommissionsValidationRoute
-  '/revenue/commissions/summaries/': typeof RevenueCommissionsSummariesIndexRoute
-  '/revenue/commissions/summaries/by-brand': typeof RevenueCommissionsSummariesByBrandRoute
-  '/revenue/commissions/summaries/by-ga': typeof RevenueCommissionsSummariesByGaRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/revenue' | '/revenue/' | '/revenue/coverage' | '/revenue/statements/' | '/revenue/statements/config' | '/revenue/statements/gaps' | '/revenue/statements/manual-entry' | '/revenue/statements/$brandCode' | '/revenue/imports/' | '/revenue/imports/new' | '/revenue/imports/$batchId' | '/revenue/data/' | '/revenue/data/by-player/$gamingAccountId' | '/revenue/commissions/' | '/revenue/commissions/validation' | '/revenue/commissions/summaries/' | '/revenue/commissions/summaries/by-brand' | '/revenue/commissions/summaries/by-ga'
+  fullPaths:
+    | '/'
+    | '/revenue'
+    | '/revenue/commissions'
+    | '/revenue/imports'
+    | '/revenue/statements'
+    | '/revenue/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/revenue' | '/revenue/' | '/revenue/coverage' | '/revenue/statements/' | '/revenue/statements/config' | '/revenue/statements/gaps' | '/revenue/statements/manual-entry' | '/revenue/statements/$brandCode' | '/revenue/imports/' | '/revenue/imports/new' | '/revenue/imports/$batchId' | '/revenue/data/' | '/revenue/data/by-player/$gamingAccountId' | '/revenue/commissions/' | '/revenue/commissions/validation' | '/revenue/commissions/summaries/' | '/revenue/commissions/summaries/by-brand' | '/revenue/commissions/summaries/by-ga'
-  id: '__root__' | '/' | '/revenue' | '/revenue/' | '/revenue/coverage' | '/revenue/statements/' | '/revenue/statements/config' | '/revenue/statements/gaps' | '/revenue/statements/manual-entry' | '/revenue/statements/$brandCode' | '/revenue/imports/' | '/revenue/imports/new' | '/revenue/imports/$batchId' | '/revenue/data/' | '/revenue/data/by-player/$gamingAccountId' | '/revenue/commissions/' | '/revenue/commissions/validation' | '/revenue/commissions/summaries/' | '/revenue/commissions/summaries/by-brand' | '/revenue/commissions/summaries/by-ga'
+  to:
+    | '/'
+    | '/revenue/commissions'
+    | '/revenue/imports'
+    | '/revenue/statements'
+    | '/revenue'
+  id:
+    | '__root__'
+    | '/'
+    | '/revenue'
+    | '/revenue/commissions'
+    | '/revenue/imports'
+    | '/revenue/statements'
+    | '/revenue/'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   RevenueRoute: typeof RevenueRouteWithChildren
@@ -271,13 +104,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/revenue': {
       id: '/revenue'
       path: '/revenue'
@@ -285,133 +111,64 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevenueRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/revenue/': {
       id: '/revenue/'
       path: '/'
       fullPath: '/revenue/'
       preLoaderRoute: typeof RevenueIndexRouteImport
-      parentRoute: typeof RevenueRouteImport
+      parentRoute: typeof RevenueRoute
     }
-    '/revenue/coverage': {
-      id: '/revenue/coverage'
-      path: '/coverage'
-      fullPath: '/revenue/coverage'
-      preLoaderRoute: typeof RevenueCoverageRouteImport
-      parentRoute: typeof RevenueRouteImport
+    '/revenue/statements': {
+      id: '/revenue/statements'
+      path: '/statements'
+      fullPath: '/revenue/statements'
+      preLoaderRoute: typeof RevenueStatementsRouteImport
+      parentRoute: typeof RevenueRoute
     }
-    '/revenue/statements/': {
-      id: '/revenue/statements/'
-      path: '/statements/'
-      fullPath: '/revenue/statements/'
-      preLoaderRoute: typeof RevenueStatementsIndexRouteImport
-      parentRoute: typeof RevenueRouteImport
+    '/revenue/imports': {
+      id: '/revenue/imports'
+      path: '/imports'
+      fullPath: '/revenue/imports'
+      preLoaderRoute: typeof RevenueImportsRouteImport
+      parentRoute: typeof RevenueRoute
     }
-    '/revenue/statements/config': {
-      id: '/revenue/statements/config'
-      path: '/statements/config'
-      fullPath: '/revenue/statements/config'
-      preLoaderRoute: typeof RevenueStatementsConfigRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/statements/gaps': {
-      id: '/revenue/statements/gaps'
-      path: '/statements/gaps'
-      fullPath: '/revenue/statements/gaps'
-      preLoaderRoute: typeof RevenueStatementsGapsRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/statements/manual-entry': {
-      id: '/revenue/statements/manual-entry'
-      path: '/statements/manual-entry'
-      fullPath: '/revenue/statements/manual-entry'
-      preLoaderRoute: typeof RevenueStatementsManualEntryRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/statements/$brandCode': {
-      id: '/revenue/statements/$brandCode'
-      path: '/statements/$brandCode'
-      fullPath: '/revenue/statements/$brandCode'
-      preLoaderRoute: typeof RevenueStatementsBrandCodeRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/imports/': {
-      id: '/revenue/imports/'
-      path: '/imports/'
-      fullPath: '/revenue/imports/'
-      preLoaderRoute: typeof RevenueImportsIndexRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/imports/new': {
-      id: '/revenue/imports/new'
-      path: '/imports/new'
-      fullPath: '/revenue/imports/new'
-      preLoaderRoute: typeof RevenueImportsNewRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/imports/$batchId': {
-      id: '/revenue/imports/$batchId'
-      path: '/imports/$batchId'
-      fullPath: '/revenue/imports/$batchId'
-      preLoaderRoute: typeof RevenueImportsBatchIdRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/data/': {
-      id: '/revenue/data/'
-      path: '/data/'
-      fullPath: '/revenue/data/'
-      preLoaderRoute: typeof RevenueDataIndexRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/data/by-player/$gamingAccountId': {
-      id: '/revenue/data/by-player/$gamingAccountId'
-      path: '/data/by-player/$gamingAccountId'
-      fullPath: '/revenue/data/by-player/$gamingAccountId'
-      preLoaderRoute: typeof RevenueDataByPlayerGamingAccountIdRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/commissions/': {
-      id: '/revenue/commissions/'
-      path: '/commissions/'
-      fullPath: '/revenue/commissions/'
-      preLoaderRoute: typeof RevenueCommissionsIndexRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/commissions/validation': {
-      id: '/revenue/commissions/validation'
-      path: '/commissions/validation'
-      fullPath: '/revenue/commissions/validation'
-      preLoaderRoute: typeof RevenueCommissionsValidationRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/commissions/summaries/': {
-      id: '/revenue/commissions/summaries/'
-      path: '/commissions/summaries/'
-      fullPath: '/revenue/commissions/summaries/'
-      preLoaderRoute: typeof RevenueCommissionsSummariesIndexRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/commissions/summaries/by-brand': {
-      id: '/revenue/commissions/summaries/by-brand'
-      path: '/commissions/summaries/by-brand'
-      fullPath: '/revenue/commissions/summaries/by-brand'
-      preLoaderRoute: typeof RevenueCommissionsSummariesByBrandRouteImport
-      parentRoute: typeof RevenueRouteImport
-    }
-    '/revenue/commissions/summaries/by-ga': {
-      id: '/revenue/commissions/summaries/by-ga'
-      path: '/commissions/summaries/by-ga'
-      fullPath: '/revenue/commissions/summaries/by-ga'
-      preLoaderRoute: typeof RevenueCommissionsSummariesByGaRouteImport
-      parentRoute: typeof RevenueRouteImport
+    '/revenue/commissions': {
+      id: '/revenue/commissions'
+      path: '/commissions'
+      fullPath: '/revenue/commissions'
+      preLoaderRoute: typeof RevenueCommissionsRouteImport
+      parentRoute: typeof RevenueRoute
     }
   }
 }
+
+interface RevenueRouteChildren {
+  RevenueCommissionsRoute: typeof RevenueCommissionsRoute
+  RevenueImportsRoute: typeof RevenueImportsRoute
+  RevenueStatementsRoute: typeof RevenueStatementsRoute
+  RevenueIndexRoute: typeof RevenueIndexRoute
+}
+
+const RevenueRouteChildren: RevenueRouteChildren = {
+  RevenueCommissionsRoute: RevenueCommissionsRoute,
+  RevenueImportsRoute: RevenueImportsRoute,
+  RevenueStatementsRoute: RevenueStatementsRoute,
+  RevenueIndexRoute: RevenueIndexRoute,
+}
+
+const RevenueRouteWithChildren = RevenueRoute._addFileChildren(RevenueRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RevenueRoute: RevenueRouteWithChildren,
 }
-
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

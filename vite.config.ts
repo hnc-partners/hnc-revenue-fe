@@ -41,8 +41,7 @@ export default defineConfig({
   server: {
     port: 5177,
     host: true,
-    // Dual-service proxy: revenue (F30 + F21) + report-management (F54)
-    proxy: createHncProxy({ crossServices: ['revenue', 'report-management'] }),
+    proxy: createHncProxy({ crossServices: ['report-management'] }),
   },
   build: hncBuildConfig(isProduction),
 });

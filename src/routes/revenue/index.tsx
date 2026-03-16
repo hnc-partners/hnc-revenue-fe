@@ -3,11 +3,11 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 /**
  * Revenue Index Route
  *
- * Redirects /revenue/ to /revenue/statements (default tab).
+ * Redirects /revenue/ to the default tab (Statements).
  */
 export const Route = createFileRoute('/revenue/')({
   beforeLoad: () => {
-    throw redirect({ to: '/revenue/statements/' });
+    throw redirect({ to: '/revenue/statements' });
   },
   component: () => null,
 });

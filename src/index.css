@@ -17,3 +17,10 @@ textarea,
   -webkit-user-select: text;
   user-select: text;
 }
+
+/* Active sort arrow: accent color + bold stroke (MF-specific) */
+th.cursor-pointer span.ml-1 > svg.lucide-chevron-up,
+th.cursor-pointer span.ml-1 > svg.lucide-chevron-down {
+  color: hsl(var(--mf-accent-foreground));
+  stroke-width: 2.5;
+}

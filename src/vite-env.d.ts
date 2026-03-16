@@ -2,7 +2,6 @@
 
 interface ImportMetaEnv {
   readonly VITE_AUTH_URL: string;
-  readonly VITE_REVENUE_API_URL: string;
   readonly VITE_REPORT_MANAGEMENT_API_URL: string;
   readonly VITE_MOCK_AUTH: string;
 }

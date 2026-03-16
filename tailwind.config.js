@@ -1,7 +1,7 @@
 /**
- * HNC Revenue-FE Tailwind Config (PLAN-050 Migration)
+ * HNC MF Template Tailwind Config (PLAN-049/PLAN-050 Standard)
  *
- * Shell owns :root theme vars — this MF just references them.
+ * Shell owns :root theme vars -- this MF just references them.
  * Based on: docs/design/mf-tailwind-config-template.js
  */
 

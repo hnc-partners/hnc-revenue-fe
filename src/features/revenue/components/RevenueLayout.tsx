@@ -3,7 +3,7 @@
  *
  * Main layout component for the Revenue section.
  * Provides tab navigation that wraps all revenue-related pages.
- * Three top-level tabs: Statements (F54), Imports (F30), Commissions (F21).
+ * Each tab manages its own inline header with title and action buttons.
  */
 
 import { ReactNode, useEffect } from 'react';
@@ -24,9 +24,9 @@ interface RevenueLayoutProps {
 
 /** Tab configuration for the revenue section */
 const TABS = [
-  { id: 'statements', label: 'Statements', subLabel: 'Brand statement management and gap detection (F54)' },
-  { id: 'imports', label: 'Imports', subLabel: 'Revenue data imports and batch processing (F30)' },
-  { id: 'commissions', label: 'Commissions', subLabel: 'Commission calculation and validation (F21)' },
+  { id: 'statements', label: 'Statements', subLabel: 'Revenue statement management (F54)' },
+  { id: 'imports', label: 'Imports', subLabel: 'Revenue data imports (F30)' },
+  { id: 'commissions', label: 'Commissions', subLabel: 'Commission calculations (F21)' },
 ] as const;
 
 export function RevenueLayout({ activeTab, onTabChange, children }: RevenueLayoutProps) {
@@ -58,7 +58,7 @@ export function RevenueLayout({ activeTab, onTabChange, children }: RevenueLayou
       </div>
 
       {/* Tab Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-hidden">
         {children}
       </main>
     </div>
