@@ -58,7 +58,7 @@ export function RevenueLayout({ activeTab, onTabChange, children }: RevenueLayou
       </div>
 
       {/* Tab Content */}
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1 min-h-0 overflow-hidden">
         {children}
       </main>
     </div>

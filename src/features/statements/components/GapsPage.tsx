@@ -83,7 +83,7 @@ const STATUS_CONFIG: Record<
 /** Loading skeleton matching the matrix layout */
 function GapsSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-busy="true">
       <div className="flex items-center gap-4">
         <Skeleton className="h-8 w-40" />
         <Skeleton className="h-8 w-40" />

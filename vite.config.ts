@@ -43,5 +43,16 @@ export default defineConfig({
     host: true,
     proxy: createHncProxy({ crossServices: ['report-management'] }),
   },
-  build: hncBuildConfig(isProduction),
+  build: {
+    ...hncBuildConfig(isProduction),
+    chunkSizeWarningLimit: 550,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'route-tree': ['./src/routeTree.gen.ts'],
+          'tanstack-router': ['@tanstack/react-router'],
+        },
+      },
+    },
+  },
 });

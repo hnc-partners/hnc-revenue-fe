@@ -13,11 +13,11 @@ import { FileText, Plus, Grid3X3 } from 'lucide-react';
 import { useStatementBrands } from '../api';
 import { ServiceStatusBar } from './ServiceStatusBar';
 import { BrandCard } from './BrandCard';
-import { BrandConfigDialog } from './BrandConfigDialog';
+import { BrandConfigDialog } from './forms/BrandConfigDialog';
 
 function DashboardSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-busy="true">
       {/* Header skeleton */}
       <div className="flex items-center justify-between">
         <Skeleton className="h-7 w-40" />
@@ -49,7 +49,7 @@ function EmptyState() {
 
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
+    <div className="flex flex-col items-center justify-center py-16 text-center" role="alert">
       <div className="rounded-full bg-destructive/10 p-3 mb-4">
         <FileText className="h-6 w-6 text-destructive" />
       </div>

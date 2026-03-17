@@ -214,7 +214,7 @@ export function RunHistory({ brandCode }: RunHistoryProps) {
   if (error) {
     return (
       <div className="flex flex-col items-center py-6 text-center">
-        <p className="text-sm text-destructive mb-2">Failed to load run history</p>
+        <p className="text-sm text-destructive mb-2" role="alert">Failed to load run history</p>
         <Button variant="outline" size="sm" onClick={() => refetch()}>
           Try Again
         </Button>
@@ -256,7 +256,7 @@ export function RunHistory({ brandCode }: RunHistoryProps) {
               <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Files
               </th>
-              <th className="px-3 py-2 w-10" />
+              <th className="px-3 py-2 w-10"><span className="sr-only">Actions</span></th>
             </tr>
           </thead>
           <tbody>

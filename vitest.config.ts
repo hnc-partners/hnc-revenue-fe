@@ -12,6 +12,7 @@ export default defineConfig({
   },
   test: {
     ...sharedVitestConfig,
+    passWithNoTests: false,
     setupFiles: ['./src/test/setup.ts'],
     coverage: {
       ...sharedCoverageConfig,
@@ -21,6 +22,9 @@ export default defineConfig({
         'src/routes/**',
         'src/App.tsx',
         'src/main.tsx',
+        'src/**/types/**',
+        'src/**/index.ts',
+        'src/features/revenue/api/config.ts',
       ],
     },
   },

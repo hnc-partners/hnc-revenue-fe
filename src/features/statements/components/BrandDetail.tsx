@@ -21,7 +21,7 @@ import { BrandStatusIndicator } from './BrandStatusIndicator';
 import { RunHistory } from './RunHistory';
 import { PeriodTimeline } from './PeriodTimeline';
 import { BrandActions } from './BrandActions';
-import { BrandConfigDialog } from './BrandConfigDialog';
+import { BrandConfigDialog } from './forms/BrandConfigDialog';
 import type { RMBrandConfigWithActivity, BrandHealth } from '../types';
 
 // ---------------------------------------------------------------------------
@@ -58,7 +58,7 @@ function describeCron(cron: string | null): string {
 
 function DetailSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-busy="true">
       <div className="flex items-center gap-3">
         <Skeleton className="h-8 w-8 rounded" />
         <Skeleton className="h-7 w-48" />
@@ -194,7 +194,7 @@ export function BrandDetail({ brandCode }: BrandDetailProps) {
           </div>
         </div>
         <div className="px-4 sm:px-6 lg:px-8 pb-6">
-          <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="flex flex-col items-center justify-center py-16 text-center" role="alert">
             <div className="rounded-full bg-destructive/10 p-3 mb-4">
               <Calendar className="h-6 w-6 text-destructive" />
             </div>

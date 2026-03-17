@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@hnc-partners/ui-components';
 import { Plus, Trash2 } from 'lucide-react';
-import type { RMBrandConfigWithActivity } from '../types';
+import type { RMBrandConfigWithActivity } from '../../types';
 
 // ---------------------------------------------------------------------------
 // Zod schema
@@ -203,7 +203,7 @@ export function BrandConfigForm({
               disabled={isEdit}
             />
             {errors.brandId && (
-              <p className="text-sm text-destructive">{errors.brandId.message}</p>
+              <p className="text-sm text-destructive" role="alert">{errors.brandId.message}</p>
             )}
             {isEdit && (
               <p className="text-xs text-muted-foreground">Brand ID cannot be changed after creation.</p>
@@ -222,7 +222,7 @@ export function BrandConfigForm({
               disabled={isEdit}
             />
             {errors.brandCode && (
-              <p className="text-sm text-destructive">{errors.brandCode.message}</p>
+              <p className="text-sm text-destructive" role="alert">{errors.brandCode.message}</p>
             )}
             {isEdit && (
               <p className="text-xs text-muted-foreground">Brand code cannot be changed after creation.</p>
@@ -240,7 +240,7 @@ export function BrandConfigForm({
               {...register('brandName')}
             />
             {errors.brandName && (
-              <p className="text-sm text-destructive">{errors.brandName.message}</p>
+              <p className="text-sm text-destructive" role="alert">{errors.brandName.message}</p>
             )}
           </div>
 
@@ -266,7 +266,7 @@ export function BrandConfigForm({
               )}
             />
             {errors.acquisitionMode && (
-              <p className="text-sm text-destructive">{errors.acquisitionMode.message}</p>
+              <p className="text-sm text-destructive" role="alert">{errors.acquisitionMode.message}</p>
             )}
           </div>
 
@@ -292,7 +292,7 @@ export function BrandConfigForm({
               )}
             />
             {errors.granularity && (
-              <p className="text-sm text-destructive">{errors.granularity.message}</p>
+              <p className="text-sm text-destructive" role="alert">{errors.granularity.message}</p>
             )}
           </div>
 
@@ -319,7 +319,7 @@ export function BrandConfigForm({
               {...register('maxBackfillMonths', { valueAsNumber: true })}
             />
             {errors.maxBackfillMonths && (
-              <p className="text-sm text-destructive">{errors.maxBackfillMonths.message}</p>
+              <p className="text-sm text-destructive" role="alert">{errors.maxBackfillMonths.message}</p>
             )}
           </div>
         </div>
@@ -343,7 +343,7 @@ export function BrandConfigForm({
                 {...register('portalUrl')}
               />
               {errors.portalUrl && (
-                <p className="text-sm text-destructive">{errors.portalUrl.message}</p>
+                <p className="text-sm text-destructive" role="alert">{errors.portalUrl.message}</p>
               )}
             </div>
 
@@ -357,7 +357,7 @@ export function BrandConfigForm({
                 {...register('credentialsEnv')}
               />
               {errors.credentialsEnv && (
-                <p className="text-sm text-destructive">{errors.credentialsEnv.message}</p>
+                <p className="text-sm text-destructive" role="alert">{errors.credentialsEnv.message}</p>
               )}
             </div>
           </div>
@@ -382,7 +382,7 @@ export function BrandConfigForm({
                 {...register('currencyCode')}
               />
               {errors.currencyCode && (
-                <p className="text-sm text-destructive">{errors.currencyCode.message}</p>
+                <p className="text-sm text-destructive" role="alert">{errors.currencyCode.message}</p>
               )}
             </div>
 
@@ -392,7 +392,7 @@ export function BrandConfigForm({
                 Share Types <span className="text-destructive">*</span>
               </Label>
               {errors.shareTypes && !Array.isArray(errors.shareTypes) && (
-                <p className="text-sm text-destructive">
+                <p className="text-sm text-destructive" role="alert">
                   {(errors.shareTypes as { message?: string }).message}
                 </p>
               )}
@@ -405,7 +405,7 @@ export function BrandConfigForm({
                         {...register(`shareTypes.${index}.code`)}
                       />
                       {errors.shareTypes?.[index]?.code && (
-                        <p className="text-xs text-destructive mt-1">
+                        <p className="text-xs text-destructive mt-1" role="alert">
                           {errors.shareTypes[index].code?.message}
                         </p>
                       )}
@@ -416,7 +416,7 @@ export function BrandConfigForm({
                         {...register(`shareTypes.${index}.name`)}
                       />
                       {errors.shareTypes?.[index]?.name && (
-                        <p className="text-xs text-destructive mt-1">
+                        <p className="text-xs text-destructive mt-1" role="alert">
                           {errors.shareTypes[index].name?.message}
                         </p>
                       )}

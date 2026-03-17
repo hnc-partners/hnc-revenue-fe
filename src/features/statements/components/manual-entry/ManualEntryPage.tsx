@@ -198,7 +198,7 @@ function MetricGrid({ formData, values, onChange, errors }: MetricGridProps) {
                       aria-label={`${st.name} for ${ga.accountName}`}
                     />
                     {error && (
-                      <p className="text-xs text-destructive mt-0.5">{error}</p>
+                      <p className="text-xs text-destructive mt-0.5" role="alert">{error}</p>
                     )}
                   </td>
                 );
@@ -552,7 +552,7 @@ export function ManualEntryPage({ initialBrandCode }: ManualEntryPageProps) {
                   {...register('periodStart')}
                 />
                 {periodErrors.periodStart && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-sm text-destructive" role="alert">
                     {periodErrors.periodStart.message}
                   </p>
                 )}
@@ -567,7 +567,7 @@ export function ManualEntryPage({ initialBrandCode }: ManualEntryPageProps) {
                   {...register('periodEnd')}
                 />
                 {periodErrors.periodEnd && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-sm text-destructive" role="alert">
                     {periodErrors.periodEnd.message}
                   </p>
                 )}

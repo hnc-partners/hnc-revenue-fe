@@ -19,10 +19,10 @@ import {
   useBrandConfig,
   useCreateBrand,
   useUpdateBrand,
-} from '../api';
+} from '../../api';
 import { BrandConfigForm } from './BrandConfigForm';
 import type { BrandConfigFormData } from './BrandConfigForm';
-import type { RMCreateBrandConfigDto, RMUpdateBrandConfigDto } from '../types';
+import type { RMCreateBrandConfigDto, RMUpdateBrandConfigDto } from '../../types';
 
 // ---------------------------------------------------------------------------
 // Props
