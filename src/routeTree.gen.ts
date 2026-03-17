@@ -17,6 +17,8 @@ import { Route as RevenueImportsRouteImport } from './routes/revenue/imports'
 import { Route as RevenueCommissionsRouteImport } from './routes/revenue/commissions'
 import { Route as RevenueStatementsIndexRouteImport } from './routes/revenue/statements/index'
 import { Route as RevenueStatementsBrandCodeRouteImport } from './routes/revenue/statements/$brandCode'
+import { Route as RevenueStatementsManualEntryRouteImport } from './routes/revenue/statements/manual-entry'
+import { Route as RevenueStatementsGapsRouteImport } from './routes/revenue/statements/gaps'
 
 const RevenueRoute = RevenueRouteImport.update({
   id: '/revenue',
@@ -58,6 +60,16 @@ const RevenueStatementsBrandCodeRoute = RevenueStatementsBrandCodeRouteImport.up
   path: '/$brandCode',
   getParentRoute: () => RevenueStatementsRoute,
 } as any)
+const RevenueStatementsManualEntryRoute = RevenueStatementsManualEntryRouteImport.update({
+  id: '/manual-entry',
+  path: '/manual-entry',
+  getParentRoute: () => RevenueStatementsRoute,
+} as any)
+const RevenueStatementsGapsRoute = RevenueStatementsGapsRouteImport.update({
+  id: '/gaps',
+  path: '/gaps',
+  getParentRoute: () => RevenueStatementsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +80,8 @@ export interface FileRoutesByFullPath {
   '/revenue/': typeof RevenueIndexRoute
   '/revenue/statements/': typeof RevenueStatementsIndexRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
+  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
+  '/revenue/statements/gaps': typeof RevenueStatementsGapsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,6 +90,8 @@ export interface FileRoutesByTo {
   '/revenue': typeof RevenueIndexRoute
   '/revenue/statements': typeof RevenueStatementsIndexRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
+  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
+  '/revenue/statements/gaps': typeof RevenueStatementsGapsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -87,6 +103,8 @@ export interface FileRoutesById {
   '/revenue/': typeof RevenueIndexRoute
   '/revenue/statements/': typeof RevenueStatementsIndexRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
+  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
+  '/revenue/statements/gaps': typeof RevenueStatementsGapsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,6 +117,8 @@ export interface FileRouteTypes {
     | '/revenue/'
     | '/revenue/statements/'
     | '/revenue/statements/$brandCode'
+    | '/revenue/statements/manual-entry'
+    | '/revenue/statements/gaps'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -107,6 +127,8 @@ export interface FileRouteTypes {
     | '/revenue'
     | '/revenue/statements'
     | '/revenue/statements/$brandCode'
+    | '/revenue/statements/manual-entry'
+    | '/revenue/statements/gaps'
   id:
     | '__root__'
     | '/'
@@ -117,6 +139,8 @@ export interface FileRouteTypes {
     | '/revenue/'
     | '/revenue/statements/'
     | '/revenue/statements/$brandCode'
+    | '/revenue/statements/manual-entry'
+    | '/revenue/statements/gaps'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -182,17 +206,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevenueStatementsBrandCodeRouteImport
       parentRoute: typeof RevenueStatementsRoute
     }
+    '/revenue/statements/manual-entry': {
+      id: '/revenue/statements/manual-entry'
+      path: '/manual-entry'
+      fullPath: '/revenue/statements/manual-entry'
+      preLoaderRoute: typeof RevenueStatementsManualEntryRouteImport
+      parentRoute: typeof RevenueStatementsRoute
+    }
+    '/revenue/statements/gaps': {
+      id: '/revenue/statements/gaps'
+      path: '/gaps'
+      fullPath: '/revenue/statements/gaps'
+      preLoaderRoute: typeof RevenueStatementsGapsRouteImport
+      parentRoute: typeof RevenueStatementsRoute
+    }
   }
 }
 
 interface RevenueStatementsRouteChildren {
   RevenueStatementsIndexRoute: typeof RevenueStatementsIndexRoute
   RevenueStatementsBrandCodeRoute: typeof RevenueStatementsBrandCodeRoute
+  RevenueStatementsManualEntryRoute: typeof RevenueStatementsManualEntryRoute
+  RevenueStatementsGapsRoute: typeof RevenueStatementsGapsRoute
 }
 
 const RevenueStatementsRouteChildren: RevenueStatementsRouteChildren = {
   RevenueStatementsIndexRoute: RevenueStatementsIndexRoute,
   RevenueStatementsBrandCodeRoute: RevenueStatementsBrandCodeRoute,
+  RevenueStatementsManualEntryRoute: RevenueStatementsManualEntryRoute,
+  RevenueStatementsGapsRoute: RevenueStatementsGapsRoute,
 }
 
 const RevenueStatementsRouteWithChildren = RevenueStatementsRoute._addFileChildren(RevenueStatementsRouteChildren)

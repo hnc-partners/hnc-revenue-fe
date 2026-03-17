@@ -40,13 +40,20 @@ export function BrandCard({ brand, onEditConfig }: BrandCardProps) {
   const health = isDisabled ? 'unknown' as const : brand.health;
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={() =>
         navigate({ to: '/revenue/statements/$brandCode', params: { brandCode: brand.brandCode } })
       }
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          navigate({ to: '/revenue/statements/$brandCode', params: { brandCode: brand.brandCode } });
+        }
+      }}
       className={cn(
-        'w-full text-left rounded-lg border border-border bg-card p-4 shadow-sm',
+        'w-full text-left rounded-lg border border-border bg-card p-4 shadow-sm cursor-pointer',
         'transition-colors hover:border-mf-accent/50 hover:shadow-md',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         isDisabled && 'opacity-50'
@@ -113,6 +120,6 @@ export function BrandCard({ brand, onEditConfig }: BrandCardProps) {
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }

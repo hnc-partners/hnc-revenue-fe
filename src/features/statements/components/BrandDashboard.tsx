@@ -7,8 +7,9 @@
  */
 
 import { useState } from 'react';
+import { Link } from '@tanstack/react-router';
 import { Button, Skeleton } from '@hnc-partners/ui-components';
-import { FileText, Plus } from 'lucide-react';
+import { FileText, Plus, Grid3X3 } from 'lucide-react';
 import { useStatementBrands } from '../api';
 import { ServiceStatusBar } from './ServiceStatusBar';
 import { BrandCard } from './BrandCard';
@@ -105,6 +106,12 @@ export function BrandDashboard() {
           <h1 className="text-xl font-semibold text-foreground">Statements</h1>
           <div className="flex items-center gap-3">
             <ServiceStatusBar />
+            <Link to="/revenue/statements/gaps">
+              <Button variant="outline">
+                <Grid3X3 className="h-4 w-4 mr-2" />
+                View Gaps
+              </Button>
+            </Link>
             <Button onClick={handleOpenCreate}>
               <Plus className="h-4 w-4 mr-2" />
               New Brand

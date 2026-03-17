@@ -235,3 +235,53 @@ export interface RMUpdateBrandConfigDto {
   paused?: boolean;
   autoNotify?: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// FE-2: Brand Detail Panel Types
+// ---------------------------------------------------------------------------
+
+/** Notify status for a download run */
+export type NotifyStatus =
+  | 'pending'
+  | 'notified'
+  | 'failed'
+  | 'skipped'
+  | 'processing_failed';
+
+/** File within a download run */
+export interface RMDownloadRunFile {
+  id: string;
+  runId: string;
+  fileType: string;
+  fileName: string;
+  filePath: string;
+  fileSize: number;
+  recordCount: number | null;
+  status: 'pending' | 'processed' | 'failed';
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+/** A single download run record */
+export interface RMDownloadRun {
+  id: string;
+  brandConfigId: string;
+  brandCode: string;
+  status: RunStatus;
+  notifyStatus: NotifyStatus;
+  periodStart: string;
+  periodEnd: string;
+  sourceType: string;
+  startedAt: string;
+  completedAt: string | null;
+  errorMessage: string | null;
+  files: RMDownloadRunFile[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Paginated run history response */
+export interface RMRunsResponse {
+  data: RMDownloadRun[];
+  meta: PaginatedMeta;
+}
