@@ -4,17 +4,16 @@
  * The main exposed MF component for Revenue.
  * Shell loads this via Module Federation.
  *
- * Uses the shell's TanStack Router context for URL-based tab routing.
- * Exposed components MUST NOT create their own router instance (M08/M09),
- * but CAN use useRouterState/useNavigate from the shell's router context.
+ * Uses URL-based tab routing. When running inside the shell's RouterProvider,
+ * leverages TanStack Router for navigation. Falls back to window.location
+ * when no router context is available (tests, standalone).
  *
  * Dual export pattern (REQUIRED for MF lazy loading):
  * - Named export (primary)
  * - Default export (required for MF lazy loading)
  */
 
-import { useCallback, useMemo } from 'react';
-import { useRouterState, useNavigate } from '@tanstack/react-router';
+import { useCallback, useMemo, useSyncExternalStore } from 'react';
 import { RevenueLayout } from './RevenueLayout';
 import { BrandDashboard } from '@/features/statements';
 import { ImportsPlaceholder } from './imports/ImportsPlaceholder';
@@ -30,6 +29,44 @@ import {
   TabsTrigger,
 } from '@hnc-partners/ui-components';
 
+/**
+ * Subscribe to URL changes (pushState, replaceState, popstate).
+ * Works without router context — safe for MF mode, tests, and standalone.
+ */
+const locationSubscribers = new Set<() => void>();
+let patched = false;
+
+function patchHistory() {
+  if (patched) return;
+  patched = true;
+  const notify = () => locationSubscribers.forEach((cb) => cb());
+  const origPush = history.pushState.bind(history);
+  const origReplace = history.replaceState.bind(history);
+  history.pushState = (...args) => { origPush(...args); notify(); };
+  history.replaceState = (...args) => { origReplace(...args); notify(); };
+  window.addEventListener('popstate', notify);
+}
+
+function subscribeToLocation(cb: () => void) {
+  patchHistory();
+  locationSubscribers.add(cb);
+  return () => { locationSubscribers.delete(cb); };
+}
+
+function getPathname() {
+  return window.location.pathname;
+}
+
+/** Hook: reactive pathname without requiring router context */
+function usePathname() {
+  return useSyncExternalStore(subscribeToLocation, getPathname, getPathname);
+}
+
+/** Navigate by pushing to history (shell router picks this up) */
+function navigateTo(path: string) {
+  history.pushState({}, '', path);
+}
+
 /** Commission sub-tabs */
 const COMMISSION_SUB_TABS = [
   { id: 'results', label: 'Results', path: '/revenue/commissions/results' },
@@ -39,10 +76,8 @@ const COMMISSION_SUB_TABS = [
 
 /** Commission sub-tab layout for MF mode */
 function CommissionsContent() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const navigate = useNavigate();
+  const pathname = usePathname();
 
-  // Derive sub-tab and batchId from current URL
   const { subTab, batchId } = useMemo(() => {
     if (pathname.includes('/validation/')) {
       const match = pathname.match(/\/validation\/([^/]+)/);
@@ -55,10 +90,8 @@ function CommissionsContent() {
 
   const handleSubTabChange = useCallback((tabId: string) => {
     const tab = COMMISSION_SUB_TABS.find((t) => t.id === tabId);
-    if (tab) {
-      navigate({ to: tab.path });
-    }
-  }, [navigate]);
+    if (tab) navigateTo(tab.path);
+  }, []);
 
   return (
     <div className="flex flex-col h-full">
@@ -91,10 +124,8 @@ function CommissionsContent() {
 }
 
 export function RevenuePage() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const navigate = useNavigate();
+  const pathname = usePathname();
 
-  // Derive active primary tab from URL
   const activeTab = useMemo(() => {
     if (pathname.includes('/revenue/commissions')) return 'commissions';
     if (pathname.includes('/revenue/imports')) return 'imports';
@@ -107,8 +138,8 @@ export function RevenuePage() {
       imports: '/revenue/imports',
       commissions: '/revenue/commissions/results',
     };
-    navigate({ to: paths[tab] || '/revenue/statements' });
-  }, [navigate]);
+    navigateTo(paths[tab] || '/revenue/statements');
+  }, []);
 
   return (
     <RevenueLayout activeTab={activeTab} onTabChange={handleTabChange}>
