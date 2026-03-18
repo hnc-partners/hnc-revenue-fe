@@ -178,4 +178,59 @@ describe('BrandDashboard', () => {
     // Dialog should open with "New Brand" title
     expect(screen.getByText('New Brand', { selector: '[role="dialog"] *' })).toBeInTheDocument();
   });
+
+  it('renders View Gaps link pointing to gaps route', () => {
+    mockUseStatementBrands.mockReturnValue({
+      data: [makeBrand()],
+      isLoading: false,
+      error: null,
+      refetch: mockRefetch,
+    });
+
+    renderWithQuery(<BrandDashboard />);
+    const link = screen.getByText('View Gaps').closest('a');
+    expect(link).toHaveAttribute('href', '/revenue/statements/gaps');
+  });
+
+  it('renders multiple brand cards in a grid', () => {
+    mockUseStatementBrands.mockReturnValue({
+      data: [
+        makeBrand({ brandCode: 'brand-a', brandName: 'Brand A' }),
+        makeBrand({ brandCode: 'brand-b', brandName: 'Brand B' }),
+        makeBrand({ brandCode: 'brand-c', brandName: 'Brand C' }),
+      ],
+      isLoading: false,
+      error: null,
+      refetch: mockRefetch,
+    });
+
+    renderWithQuery(<BrandDashboard />);
+    expect(screen.getByText('Brand A')).toBeInTheDocument();
+    expect(screen.getByText('Brand B')).toBeInTheDocument();
+    expect(screen.getByText('Brand C')).toBeInTheDocument();
+  });
+
+  it('renders empty state when brands is null', () => {
+    mockUseStatementBrands.mockReturnValue({
+      data: null,
+      isLoading: false,
+      error: null,
+      refetch: mockRefetch,
+    });
+
+    renderWithQuery(<BrandDashboard />);
+    expect(screen.getByText('No Brands Configured')).toBeInTheDocument();
+  });
+
+  it('renders empty state message text', () => {
+    mockUseStatementBrands.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+      refetch: mockRefetch,
+    });
+
+    renderWithQuery(<BrandDashboard />);
+    expect(screen.getByText(/no brands have been set up/i)).toBeInTheDocument();
+  });
 });

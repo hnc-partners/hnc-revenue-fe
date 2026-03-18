@@ -8,7 +8,7 @@ import { ValidationDetailPage } from '@/features/commissions/components/Validati
  * Route: /revenue/commissions/validation/:batchId
  */
 export const Route = createFileRoute(
-  '/revenue/commissions/validation/$batchId'
+  '/revenue/commissions/validation_/$batchId'
 )({
   component: ValidationDetailRoute,
 });

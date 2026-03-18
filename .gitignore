@@ -47,7 +47,7 @@ pnpm-workspace.yaml
 .env.production
 
 # Test coverage
-coverage/
+/coverage/
 
 # .claude — symlinked commands managed by sync-commands.sh
 .claude/commands/

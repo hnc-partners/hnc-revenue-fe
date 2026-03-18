@@ -78,13 +78,6 @@ describe('apiFetch', () => {
     });
 
     await expect(apiFetch('http://api.test/endpoint')).rejects.toThrow(ApiError);
-
-    try {
-      await apiFetch('http://api.test/endpoint');
-    } catch (err) {
-      // This won't actually run since the test above already verified the throw.
-      // But we check the type for thoroughness in a separate test below.
-    }
   });
 
   it('includes status and message in ApiError', async () => {

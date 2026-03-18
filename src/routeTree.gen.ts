@@ -14,15 +14,20 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as RevenueIndexRouteImport } from './routes/revenue/index'
 import { Route as RevenueStatementsRouteImport } from './routes/revenue/statements'
 import { Route as RevenueImportsRouteImport } from './routes/revenue/imports'
+import { Route as RevenueDataRouteImport } from './routes/revenue/data'
+import { Route as RevenueCoverageRouteImport } from './routes/revenue/coverage'
 import { Route as RevenueCommissionsRouteImport } from './routes/revenue/commissions'
 import { Route as RevenueStatementsIndexRouteImport } from './routes/revenue/statements/index'
-import { Route as RevenueStatementsBrandCodeRouteImport } from './routes/revenue/statements/$brandCode'
+import { Route as RevenueImportsIndexRouteImport } from './routes/revenue/imports/index'
+import { Route as RevenueCommissionsIndexRouteImport } from './routes/revenue/commissions/index'
 import { Route as RevenueStatementsManualEntryRouteImport } from './routes/revenue/statements/manual-entry'
 import { Route as RevenueStatementsGapsRouteImport } from './routes/revenue/statements/gaps'
-import { Route as RevenueCommissionsIndexRouteImport } from './routes/revenue/commissions/index'
-import { Route as RevenueCommissionsResultsRouteImport } from './routes/revenue/commissions/results'
-import { Route as RevenueCommissionsSummaryRouteImport } from './routes/revenue/commissions/summary'
+import { Route as RevenueStatementsBrandCodeRouteImport } from './routes/revenue/statements/$brandCode'
+import { Route as RevenueImportsNewRouteImport } from './routes/revenue/imports/new'
+import { Route as RevenueImportsBatchIdRouteImport } from './routes/revenue/imports/$batchId'
 import { Route as RevenueCommissionsValidationRouteImport } from './routes/revenue/commissions/validation'
+import { Route as RevenueCommissionsSummaryRouteImport } from './routes/revenue/commissions/summary'
+import { Route as RevenueCommissionsResultsRouteImport } from './routes/revenue/commissions/results'
 import { Route as RevenueCommissionsValidationBatchIdRouteImport } from './routes/revenue/commissions/validation_.$batchId'
 
 const RevenueRoute = RevenueRouteImport.update({
@@ -50,6 +55,16 @@ const RevenueImportsRoute = RevenueImportsRouteImport.update({
   path: '/imports',
   getParentRoute: () => RevenueRoute,
 } as any)
+const RevenueDataRoute = RevenueDataRouteImport.update({
+  id: '/data',
+  path: '/data',
+  getParentRoute: () => RevenueRoute,
+} as any)
+const RevenueCoverageRoute = RevenueCoverageRouteImport.update({
+  id: '/coverage',
+  path: '/coverage',
+  getParentRoute: () => RevenueRoute,
+} as any)
 const RevenueCommissionsRoute = RevenueCommissionsRouteImport.update({
   id: '/commissions',
   path: '/commissions',
@@ -60,95 +75,130 @@ const RevenueStatementsIndexRoute = RevenueStatementsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => RevenueStatementsRoute,
 } as any)
-const RevenueStatementsBrandCodeRoute = RevenueStatementsBrandCodeRouteImport.update({
-  id: '/$brandCode',
-  path: '/$brandCode',
-  getParentRoute: () => RevenueStatementsRoute,
-} as any)
-const RevenueStatementsManualEntryRoute = RevenueStatementsManualEntryRouteImport.update({
-  id: '/manual-entry',
-  path: '/manual-entry',
-  getParentRoute: () => RevenueStatementsRoute,
-} as any)
-const RevenueStatementsGapsRoute = RevenueStatementsGapsRouteImport.update({
-  id: '/gaps',
-  path: '/gaps',
-  getParentRoute: () => RevenueStatementsRoute,
+const RevenueImportsIndexRoute = RevenueImportsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RevenueImportsRoute,
 } as any)
 const RevenueCommissionsIndexRoute = RevenueCommissionsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => RevenueCommissionsRoute,
 } as any)
-const RevenueCommissionsResultsRoute = RevenueCommissionsResultsRouteImport.update({
-  id: '/results',
-  path: '/results',
-  getParentRoute: () => RevenueCommissionsRoute,
+const RevenueStatementsManualEntryRoute =
+  RevenueStatementsManualEntryRouteImport.update({
+    id: '/manual-entry',
+    path: '/manual-entry',
+    getParentRoute: () => RevenueStatementsRoute,
+  } as any)
+const RevenueStatementsGapsRoute = RevenueStatementsGapsRouteImport.update({
+  id: '/gaps',
+  path: '/gaps',
+  getParentRoute: () => RevenueStatementsRoute,
 } as any)
-const RevenueCommissionsSummaryRoute = RevenueCommissionsSummaryRouteImport.update({
-  id: '/summary',
-  path: '/summary',
-  getParentRoute: () => RevenueCommissionsRoute,
+const RevenueStatementsBrandCodeRoute =
+  RevenueStatementsBrandCodeRouteImport.update({
+    id: '/$brandCode',
+    path: '/$brandCode',
+    getParentRoute: () => RevenueStatementsRoute,
+  } as any)
+const RevenueImportsNewRoute = RevenueImportsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => RevenueImportsRoute,
 } as any)
-const RevenueCommissionsValidationRoute = RevenueCommissionsValidationRouteImport.update({
-  id: '/validation',
-  path: '/validation',
-  getParentRoute: () => RevenueCommissionsRoute,
+const RevenueImportsBatchIdRoute = RevenueImportsBatchIdRouteImport.update({
+  id: '/$batchId',
+  path: '/$batchId',
+  getParentRoute: () => RevenueImportsRoute,
 } as any)
-const RevenueCommissionsValidationBatchIdRoute = RevenueCommissionsValidationBatchIdRouteImport.update({
-  id: '/validation/$batchId',
-  path: '/validation/$batchId',
-  getParentRoute: () => RevenueCommissionsRoute,
-} as any)
+const RevenueCommissionsValidationRoute =
+  RevenueCommissionsValidationRouteImport.update({
+    id: '/validation',
+    path: '/validation',
+    getParentRoute: () => RevenueCommissionsRoute,
+  } as any)
+const RevenueCommissionsSummaryRoute =
+  RevenueCommissionsSummaryRouteImport.update({
+    id: '/summary',
+    path: '/summary',
+    getParentRoute: () => RevenueCommissionsRoute,
+  } as any)
+const RevenueCommissionsResultsRoute =
+  RevenueCommissionsResultsRouteImport.update({
+    id: '/results',
+    path: '/results',
+    getParentRoute: () => RevenueCommissionsRoute,
+  } as any)
+const RevenueCommissionsValidationBatchIdRoute =
+  RevenueCommissionsValidationBatchIdRouteImport.update({
+    id: '/validation_/$batchId',
+    path: '/validation/$batchId',
+    getParentRoute: () => RevenueCommissionsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/revenue': typeof RevenueRouteWithChildren
   '/revenue/commissions': typeof RevenueCommissionsRouteWithChildren
-  '/revenue/imports': typeof RevenueImportsRoute
+  '/revenue/coverage': typeof RevenueCoverageRoute
+  '/revenue/data': typeof RevenueDataRoute
+  '/revenue/imports': typeof RevenueImportsRouteWithChildren
   '/revenue/statements': typeof RevenueStatementsRouteWithChildren
   '/revenue/': typeof RevenueIndexRoute
-  '/revenue/commissions/': typeof RevenueCommissionsIndexRoute
   '/revenue/commissions/results': typeof RevenueCommissionsResultsRoute
   '/revenue/commissions/summary': typeof RevenueCommissionsSummaryRoute
   '/revenue/commissions/validation': typeof RevenueCommissionsValidationRoute
-  '/revenue/commissions/validation/$batchId': typeof RevenueCommissionsValidationBatchIdRoute
-  '/revenue/statements/': typeof RevenueStatementsIndexRoute
+  '/revenue/imports/$batchId': typeof RevenueImportsBatchIdRoute
+  '/revenue/imports/new': typeof RevenueImportsNewRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
-  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
   '/revenue/statements/gaps': typeof RevenueStatementsGapsRoute
+  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
+  '/revenue/commissions/': typeof RevenueCommissionsIndexRoute
+  '/revenue/imports/': typeof RevenueImportsIndexRoute
+  '/revenue/statements/': typeof RevenueStatementsIndexRoute
+  '/revenue/commissions/validation/$batchId': typeof RevenueCommissionsValidationBatchIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/revenue/imports': typeof RevenueImportsRoute
+  '/revenue/coverage': typeof RevenueCoverageRoute
+  '/revenue/data': typeof RevenueDataRoute
   '/revenue': typeof RevenueIndexRoute
-  '/revenue/commissions': typeof RevenueCommissionsIndexRoute
   '/revenue/commissions/results': typeof RevenueCommissionsResultsRoute
   '/revenue/commissions/summary': typeof RevenueCommissionsSummaryRoute
   '/revenue/commissions/validation': typeof RevenueCommissionsValidationRoute
-  '/revenue/commissions/validation/$batchId': typeof RevenueCommissionsValidationBatchIdRoute
-  '/revenue/statements': typeof RevenueStatementsIndexRoute
+  '/revenue/imports/$batchId': typeof RevenueImportsBatchIdRoute
+  '/revenue/imports/new': typeof RevenueImportsNewRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
-  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
   '/revenue/statements/gaps': typeof RevenueStatementsGapsRoute
+  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
+  '/revenue/commissions': typeof RevenueCommissionsIndexRoute
+  '/revenue/imports': typeof RevenueImportsIndexRoute
+  '/revenue/statements': typeof RevenueStatementsIndexRoute
+  '/revenue/commissions/validation/$batchId': typeof RevenueCommissionsValidationBatchIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/revenue': typeof RevenueRouteWithChildren
   '/revenue/commissions': typeof RevenueCommissionsRouteWithChildren
-  '/revenue/imports': typeof RevenueImportsRoute
+  '/revenue/coverage': typeof RevenueCoverageRoute
+  '/revenue/data': typeof RevenueDataRoute
+  '/revenue/imports': typeof RevenueImportsRouteWithChildren
   '/revenue/statements': typeof RevenueStatementsRouteWithChildren
   '/revenue/': typeof RevenueIndexRoute
-  '/revenue/commissions/': typeof RevenueCommissionsIndexRoute
   '/revenue/commissions/results': typeof RevenueCommissionsResultsRoute
   '/revenue/commissions/summary': typeof RevenueCommissionsSummaryRoute
   '/revenue/commissions/validation': typeof RevenueCommissionsValidationRoute
-  '/revenue/commissions/validation/$batchId': typeof RevenueCommissionsValidationBatchIdRoute
-  '/revenue/statements/': typeof RevenueStatementsIndexRoute
+  '/revenue/imports/$batchId': typeof RevenueImportsBatchIdRoute
+  '/revenue/imports/new': typeof RevenueImportsNewRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
-  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
   '/revenue/statements/gaps': typeof RevenueStatementsGapsRoute
+  '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
+  '/revenue/commissions/': typeof RevenueCommissionsIndexRoute
+  '/revenue/imports/': typeof RevenueImportsIndexRoute
+  '/revenue/statements/': typeof RevenueStatementsIndexRoute
+  '/revenue/commissions/validation_/$batchId': typeof RevenueCommissionsValidationBatchIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -156,49 +206,63 @@ export interface FileRouteTypes {
     | '/'
     | '/revenue'
     | '/revenue/commissions'
+    | '/revenue/coverage'
+    | '/revenue/data'
     | '/revenue/imports'
     | '/revenue/statements'
     | '/revenue/'
-    | '/revenue/commissions/'
     | '/revenue/commissions/results'
     | '/revenue/commissions/summary'
     | '/revenue/commissions/validation'
-    | '/revenue/commissions/validation/$batchId'
-    | '/revenue/statements/'
+    | '/revenue/imports/$batchId'
+    | '/revenue/imports/new'
     | '/revenue/statements/$brandCode'
-    | '/revenue/statements/manual-entry'
     | '/revenue/statements/gaps'
+    | '/revenue/statements/manual-entry'
+    | '/revenue/commissions/'
+    | '/revenue/imports/'
+    | '/revenue/statements/'
+    | '/revenue/commissions/validation/$batchId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/revenue/imports'
+    | '/revenue/coverage'
+    | '/revenue/data'
     | '/revenue'
-    | '/revenue/commissions'
     | '/revenue/commissions/results'
     | '/revenue/commissions/summary'
     | '/revenue/commissions/validation'
-    | '/revenue/commissions/validation/$batchId'
-    | '/revenue/statements'
+    | '/revenue/imports/$batchId'
+    | '/revenue/imports/new'
     | '/revenue/statements/$brandCode'
-    | '/revenue/statements/manual-entry'
     | '/revenue/statements/gaps'
+    | '/revenue/statements/manual-entry'
+    | '/revenue/commissions'
+    | '/revenue/imports'
+    | '/revenue/statements'
+    | '/revenue/commissions/validation/$batchId'
   id:
     | '__root__'
     | '/'
     | '/revenue'
     | '/revenue/commissions'
+    | '/revenue/coverage'
+    | '/revenue/data'
     | '/revenue/imports'
     | '/revenue/statements'
     | '/revenue/'
-    | '/revenue/commissions/'
     | '/revenue/commissions/results'
     | '/revenue/commissions/summary'
     | '/revenue/commissions/validation'
-    | '/revenue/commissions/validation/$batchId'
-    | '/revenue/statements/'
+    | '/revenue/imports/$batchId'
+    | '/revenue/imports/new'
     | '/revenue/statements/$brandCode'
-    | '/revenue/statements/manual-entry'
     | '/revenue/statements/gaps'
+    | '/revenue/statements/manual-entry'
+    | '/revenue/commissions/'
+    | '/revenue/imports/'
+    | '/revenue/statements/'
+    | '/revenue/commissions/validation_/$batchId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -243,47 +307,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevenueImportsRouteImport
       parentRoute: typeof RevenueRoute
     }
+    '/revenue/data': {
+      id: '/revenue/data'
+      path: '/data'
+      fullPath: '/revenue/data'
+      preLoaderRoute: typeof RevenueDataRouteImport
+      parentRoute: typeof RevenueRoute
+    }
+    '/revenue/coverage': {
+      id: '/revenue/coverage'
+      path: '/coverage'
+      fullPath: '/revenue/coverage'
+      preLoaderRoute: typeof RevenueCoverageRouteImport
+      parentRoute: typeof RevenueRoute
+    }
     '/revenue/commissions': {
       id: '/revenue/commissions'
       path: '/commissions'
       fullPath: '/revenue/commissions'
       preLoaderRoute: typeof RevenueCommissionsRouteImport
       parentRoute: typeof RevenueRoute
-    }
-    '/revenue/commissions/': {
-      id: '/revenue/commissions/'
-      path: '/'
-      fullPath: '/revenue/commissions/'
-      preLoaderRoute: typeof RevenueCommissionsIndexRouteImport
-      parentRoute: typeof RevenueCommissionsRoute
-    }
-    '/revenue/commissions/results': {
-      id: '/revenue/commissions/results'
-      path: '/results'
-      fullPath: '/revenue/commissions/results'
-      preLoaderRoute: typeof RevenueCommissionsResultsRouteImport
-      parentRoute: typeof RevenueCommissionsRoute
-    }
-    '/revenue/commissions/summary': {
-      id: '/revenue/commissions/summary'
-      path: '/summary'
-      fullPath: '/revenue/commissions/summary'
-      preLoaderRoute: typeof RevenueCommissionsSummaryRouteImport
-      parentRoute: typeof RevenueCommissionsRoute
-    }
-    '/revenue/commissions/validation': {
-      id: '/revenue/commissions/validation'
-      path: '/validation'
-      fullPath: '/revenue/commissions/validation'
-      preLoaderRoute: typeof RevenueCommissionsValidationRouteImport
-      parentRoute: typeof RevenueCommissionsRoute
-    }
-    '/revenue/commissions/validation/$batchId': {
-      id: '/revenue/commissions/validation/$batchId'
-      path: '/validation/$batchId'
-      fullPath: '/revenue/commissions/validation/$batchId'
-      preLoaderRoute: typeof RevenueCommissionsValidationBatchIdRouteImport
-      parentRoute: typeof RevenueCommissionsRoute
     }
     '/revenue/statements/': {
       id: '/revenue/statements/'
@@ -292,12 +335,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevenueStatementsIndexRouteImport
       parentRoute: typeof RevenueStatementsRoute
     }
-    '/revenue/statements/$brandCode': {
-      id: '/revenue/statements/$brandCode'
-      path: '/$brandCode'
-      fullPath: '/revenue/statements/$brandCode'
-      preLoaderRoute: typeof RevenueStatementsBrandCodeRouteImport
-      parentRoute: typeof RevenueStatementsRoute
+    '/revenue/imports/': {
+      id: '/revenue/imports/'
+      path: '/'
+      fullPath: '/revenue/imports/'
+      preLoaderRoute: typeof RevenueImportsIndexRouteImport
+      parentRoute: typeof RevenueImportsRoute
+    }
+    '/revenue/commissions/': {
+      id: '/revenue/commissions/'
+      path: '/'
+      fullPath: '/revenue/commissions/'
+      preLoaderRoute: typeof RevenueCommissionsIndexRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
     }
     '/revenue/statements/manual-entry': {
       id: '/revenue/statements/manual-entry'
@@ -313,58 +363,131 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevenueStatementsGapsRouteImport
       parentRoute: typeof RevenueStatementsRoute
     }
+    '/revenue/statements/$brandCode': {
+      id: '/revenue/statements/$brandCode'
+      path: '/$brandCode'
+      fullPath: '/revenue/statements/$brandCode'
+      preLoaderRoute: typeof RevenueStatementsBrandCodeRouteImport
+      parentRoute: typeof RevenueStatementsRoute
+    }
+    '/revenue/imports/new': {
+      id: '/revenue/imports/new'
+      path: '/new'
+      fullPath: '/revenue/imports/new'
+      preLoaderRoute: typeof RevenueImportsNewRouteImport
+      parentRoute: typeof RevenueImportsRoute
+    }
+    '/revenue/imports/$batchId': {
+      id: '/revenue/imports/$batchId'
+      path: '/$batchId'
+      fullPath: '/revenue/imports/$batchId'
+      preLoaderRoute: typeof RevenueImportsBatchIdRouteImport
+      parentRoute: typeof RevenueImportsRoute
+    }
+    '/revenue/commissions/validation': {
+      id: '/revenue/commissions/validation'
+      path: '/validation'
+      fullPath: '/revenue/commissions/validation'
+      preLoaderRoute: typeof RevenueCommissionsValidationRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
+    }
+    '/revenue/commissions/summary': {
+      id: '/revenue/commissions/summary'
+      path: '/summary'
+      fullPath: '/revenue/commissions/summary'
+      preLoaderRoute: typeof RevenueCommissionsSummaryRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
+    }
+    '/revenue/commissions/results': {
+      id: '/revenue/commissions/results'
+      path: '/results'
+      fullPath: '/revenue/commissions/results'
+      preLoaderRoute: typeof RevenueCommissionsResultsRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
+    }
+    '/revenue/commissions/validation_/$batchId': {
+      id: '/revenue/commissions/validation_/$batchId'
+      path: '/validation/$batchId'
+      fullPath: '/revenue/commissions/validation/$batchId'
+      preLoaderRoute: typeof RevenueCommissionsValidationBatchIdRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
+    }
   }
 }
 
-interface RevenueStatementsRouteChildren {
-  RevenueStatementsIndexRoute: typeof RevenueStatementsIndexRoute
-  RevenueStatementsBrandCodeRoute: typeof RevenueStatementsBrandCodeRoute
-  RevenueStatementsManualEntryRoute: typeof RevenueStatementsManualEntryRoute
-  RevenueStatementsGapsRoute: typeof RevenueStatementsGapsRoute
-}
-
-const RevenueStatementsRouteChildren: RevenueStatementsRouteChildren = {
-  RevenueStatementsIndexRoute: RevenueStatementsIndexRoute,
-  RevenueStatementsBrandCodeRoute: RevenueStatementsBrandCodeRoute,
-  RevenueStatementsManualEntryRoute: RevenueStatementsManualEntryRoute,
-  RevenueStatementsGapsRoute: RevenueStatementsGapsRoute,
-}
-
-const RevenueStatementsRouteWithChildren = RevenueStatementsRoute._addFileChildren(RevenueStatementsRouteChildren)
-
 interface RevenueCommissionsRouteChildren {
-  RevenueCommissionsIndexRoute: typeof RevenueCommissionsIndexRoute
   RevenueCommissionsResultsRoute: typeof RevenueCommissionsResultsRoute
   RevenueCommissionsSummaryRoute: typeof RevenueCommissionsSummaryRoute
   RevenueCommissionsValidationRoute: typeof RevenueCommissionsValidationRoute
+  RevenueCommissionsIndexRoute: typeof RevenueCommissionsIndexRoute
   RevenueCommissionsValidationBatchIdRoute: typeof RevenueCommissionsValidationBatchIdRoute
 }
 
 const RevenueCommissionsRouteChildren: RevenueCommissionsRouteChildren = {
-  RevenueCommissionsIndexRoute: RevenueCommissionsIndexRoute,
   RevenueCommissionsResultsRoute: RevenueCommissionsResultsRoute,
   RevenueCommissionsSummaryRoute: RevenueCommissionsSummaryRoute,
   RevenueCommissionsValidationRoute: RevenueCommissionsValidationRoute,
-  RevenueCommissionsValidationBatchIdRoute: RevenueCommissionsValidationBatchIdRoute,
+  RevenueCommissionsIndexRoute: RevenueCommissionsIndexRoute,
+  RevenueCommissionsValidationBatchIdRoute:
+    RevenueCommissionsValidationBatchIdRoute,
 }
 
-const RevenueCommissionsRouteWithChildren = RevenueCommissionsRoute._addFileChildren(RevenueCommissionsRouteChildren)
+const RevenueCommissionsRouteWithChildren =
+  RevenueCommissionsRoute._addFileChildren(RevenueCommissionsRouteChildren)
+
+interface RevenueImportsRouteChildren {
+  RevenueImportsBatchIdRoute: typeof RevenueImportsBatchIdRoute
+  RevenueImportsNewRoute: typeof RevenueImportsNewRoute
+  RevenueImportsIndexRoute: typeof RevenueImportsIndexRoute
+}
+
+const RevenueImportsRouteChildren: RevenueImportsRouteChildren = {
+  RevenueImportsBatchIdRoute: RevenueImportsBatchIdRoute,
+  RevenueImportsNewRoute: RevenueImportsNewRoute,
+  RevenueImportsIndexRoute: RevenueImportsIndexRoute,
+}
+
+const RevenueImportsRouteWithChildren = RevenueImportsRoute._addFileChildren(
+  RevenueImportsRouteChildren,
+)
+
+interface RevenueStatementsRouteChildren {
+  RevenueStatementsBrandCodeRoute: typeof RevenueStatementsBrandCodeRoute
+  RevenueStatementsGapsRoute: typeof RevenueStatementsGapsRoute
+  RevenueStatementsManualEntryRoute: typeof RevenueStatementsManualEntryRoute
+  RevenueStatementsIndexRoute: typeof RevenueStatementsIndexRoute
+}
+
+const RevenueStatementsRouteChildren: RevenueStatementsRouteChildren = {
+  RevenueStatementsBrandCodeRoute: RevenueStatementsBrandCodeRoute,
+  RevenueStatementsGapsRoute: RevenueStatementsGapsRoute,
+  RevenueStatementsManualEntryRoute: RevenueStatementsManualEntryRoute,
+  RevenueStatementsIndexRoute: RevenueStatementsIndexRoute,
+}
+
+const RevenueStatementsRouteWithChildren =
+  RevenueStatementsRoute._addFileChildren(RevenueStatementsRouteChildren)
 
 interface RevenueRouteChildren {
   RevenueCommissionsRoute: typeof RevenueCommissionsRouteWithChildren
-  RevenueImportsRoute: typeof RevenueImportsRoute
+  RevenueCoverageRoute: typeof RevenueCoverageRoute
+  RevenueDataRoute: typeof RevenueDataRoute
+  RevenueImportsRoute: typeof RevenueImportsRouteWithChildren
   RevenueStatementsRoute: typeof RevenueStatementsRouteWithChildren
   RevenueIndexRoute: typeof RevenueIndexRoute
 }
 
 const RevenueRouteChildren: RevenueRouteChildren = {
   RevenueCommissionsRoute: RevenueCommissionsRouteWithChildren,
-  RevenueImportsRoute: RevenueImportsRoute,
+  RevenueCoverageRoute: RevenueCoverageRoute,
+  RevenueDataRoute: RevenueDataRoute,
+  RevenueImportsRoute: RevenueImportsRouteWithChildren,
   RevenueStatementsRoute: RevenueStatementsRouteWithChildren,
   RevenueIndexRoute: RevenueIndexRoute,
 }
 
-const RevenueRouteWithChildren = RevenueRoute._addFileChildren(RevenueRouteChildren)
+const RevenueRouteWithChildren =
+  RevenueRoute._addFileChildren(RevenueRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,

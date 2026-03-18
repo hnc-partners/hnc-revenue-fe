@@ -27,6 +27,8 @@ const TABS = [
   { id: 'statements', label: 'Statements', subLabel: 'Revenue statement management (F54)' },
   { id: 'imports', label: 'Imports', subLabel: 'Revenue data imports (F30)' },
   { id: 'commissions', label: 'Commissions', subLabel: 'Commission calculations (F21)' },
+  { id: 'data', label: 'Data', subLabel: 'Revenue data browser (FES-04)' },
+  { id: 'coverage', label: 'Coverage', subLabel: 'Coverage report (FES-05)' },
 ] as const;
 
 export function RevenueLayout({ activeTab, onTabChange, children }: RevenueLayoutProps) {
