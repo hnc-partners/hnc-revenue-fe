@@ -19,6 +19,11 @@ import { Route as RevenueStatementsIndexRouteImport } from './routes/revenue/sta
 import { Route as RevenueStatementsBrandCodeRouteImport } from './routes/revenue/statements/$brandCode'
 import { Route as RevenueStatementsManualEntryRouteImport } from './routes/revenue/statements/manual-entry'
 import { Route as RevenueStatementsGapsRouteImport } from './routes/revenue/statements/gaps'
+import { Route as RevenueCommissionsIndexRouteImport } from './routes/revenue/commissions/index'
+import { Route as RevenueCommissionsResultsRouteImport } from './routes/revenue/commissions/results'
+import { Route as RevenueCommissionsSummaryRouteImport } from './routes/revenue/commissions/summary'
+import { Route as RevenueCommissionsValidationRouteImport } from './routes/revenue/commissions/validation'
+import { Route as RevenueCommissionsValidationBatchIdRouteImport } from './routes/revenue/commissions/validation_.$batchId'
 
 const RevenueRoute = RevenueRouteImport.update({
   id: '/revenue',
@@ -70,14 +75,44 @@ const RevenueStatementsGapsRoute = RevenueStatementsGapsRouteImport.update({
   path: '/gaps',
   getParentRoute: () => RevenueStatementsRoute,
 } as any)
+const RevenueCommissionsIndexRoute = RevenueCommissionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RevenueCommissionsRoute,
+} as any)
+const RevenueCommissionsResultsRoute = RevenueCommissionsResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => RevenueCommissionsRoute,
+} as any)
+const RevenueCommissionsSummaryRoute = RevenueCommissionsSummaryRouteImport.update({
+  id: '/summary',
+  path: '/summary',
+  getParentRoute: () => RevenueCommissionsRoute,
+} as any)
+const RevenueCommissionsValidationRoute = RevenueCommissionsValidationRouteImport.update({
+  id: '/validation',
+  path: '/validation',
+  getParentRoute: () => RevenueCommissionsRoute,
+} as any)
+const RevenueCommissionsValidationBatchIdRoute = RevenueCommissionsValidationBatchIdRouteImport.update({
+  id: '/validation/$batchId',
+  path: '/validation/$batchId',
+  getParentRoute: () => RevenueCommissionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/revenue': typeof RevenueRouteWithChildren
-  '/revenue/commissions': typeof RevenueCommissionsRoute
+  '/revenue/commissions': typeof RevenueCommissionsRouteWithChildren
   '/revenue/imports': typeof RevenueImportsRoute
   '/revenue/statements': typeof RevenueStatementsRouteWithChildren
   '/revenue/': typeof RevenueIndexRoute
+  '/revenue/commissions/': typeof RevenueCommissionsIndexRoute
+  '/revenue/commissions/results': typeof RevenueCommissionsResultsRoute
+  '/revenue/commissions/summary': typeof RevenueCommissionsSummaryRoute
+  '/revenue/commissions/validation': typeof RevenueCommissionsValidationRoute
+  '/revenue/commissions/validation/$batchId': typeof RevenueCommissionsValidationBatchIdRoute
   '/revenue/statements/': typeof RevenueStatementsIndexRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
   '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
@@ -85,9 +120,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/revenue/commissions': typeof RevenueCommissionsRoute
   '/revenue/imports': typeof RevenueImportsRoute
   '/revenue': typeof RevenueIndexRoute
+  '/revenue/commissions': typeof RevenueCommissionsIndexRoute
+  '/revenue/commissions/results': typeof RevenueCommissionsResultsRoute
+  '/revenue/commissions/summary': typeof RevenueCommissionsSummaryRoute
+  '/revenue/commissions/validation': typeof RevenueCommissionsValidationRoute
+  '/revenue/commissions/validation/$batchId': typeof RevenueCommissionsValidationBatchIdRoute
   '/revenue/statements': typeof RevenueStatementsIndexRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
   '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
@@ -97,10 +136,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/revenue': typeof RevenueRouteWithChildren
-  '/revenue/commissions': typeof RevenueCommissionsRoute
+  '/revenue/commissions': typeof RevenueCommissionsRouteWithChildren
   '/revenue/imports': typeof RevenueImportsRoute
   '/revenue/statements': typeof RevenueStatementsRouteWithChildren
   '/revenue/': typeof RevenueIndexRoute
+  '/revenue/commissions/': typeof RevenueCommissionsIndexRoute
+  '/revenue/commissions/results': typeof RevenueCommissionsResultsRoute
+  '/revenue/commissions/summary': typeof RevenueCommissionsSummaryRoute
+  '/revenue/commissions/validation': typeof RevenueCommissionsValidationRoute
+  '/revenue/commissions/validation/$batchId': typeof RevenueCommissionsValidationBatchIdRoute
   '/revenue/statements/': typeof RevenueStatementsIndexRoute
   '/revenue/statements/$brandCode': typeof RevenueStatementsBrandCodeRoute
   '/revenue/statements/manual-entry': typeof RevenueStatementsManualEntryRoute
@@ -115,6 +159,11 @@ export interface FileRouteTypes {
     | '/revenue/imports'
     | '/revenue/statements'
     | '/revenue/'
+    | '/revenue/commissions/'
+    | '/revenue/commissions/results'
+    | '/revenue/commissions/summary'
+    | '/revenue/commissions/validation'
+    | '/revenue/commissions/validation/$batchId'
     | '/revenue/statements/'
     | '/revenue/statements/$brandCode'
     | '/revenue/statements/manual-entry'
@@ -122,9 +171,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/revenue/commissions'
     | '/revenue/imports'
     | '/revenue'
+    | '/revenue/commissions'
+    | '/revenue/commissions/results'
+    | '/revenue/commissions/summary'
+    | '/revenue/commissions/validation'
+    | '/revenue/commissions/validation/$batchId'
     | '/revenue/statements'
     | '/revenue/statements/$brandCode'
     | '/revenue/statements/manual-entry'
@@ -137,6 +190,11 @@ export interface FileRouteTypes {
     | '/revenue/imports'
     | '/revenue/statements'
     | '/revenue/'
+    | '/revenue/commissions/'
+    | '/revenue/commissions/results'
+    | '/revenue/commissions/summary'
+    | '/revenue/commissions/validation'
+    | '/revenue/commissions/validation/$batchId'
     | '/revenue/statements/'
     | '/revenue/statements/$brandCode'
     | '/revenue/statements/manual-entry'
@@ -192,6 +250,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevenueCommissionsRouteImport
       parentRoute: typeof RevenueRoute
     }
+    '/revenue/commissions/': {
+      id: '/revenue/commissions/'
+      path: '/'
+      fullPath: '/revenue/commissions/'
+      preLoaderRoute: typeof RevenueCommissionsIndexRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
+    }
+    '/revenue/commissions/results': {
+      id: '/revenue/commissions/results'
+      path: '/results'
+      fullPath: '/revenue/commissions/results'
+      preLoaderRoute: typeof RevenueCommissionsResultsRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
+    }
+    '/revenue/commissions/summary': {
+      id: '/revenue/commissions/summary'
+      path: '/summary'
+      fullPath: '/revenue/commissions/summary'
+      preLoaderRoute: typeof RevenueCommissionsSummaryRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
+    }
+    '/revenue/commissions/validation': {
+      id: '/revenue/commissions/validation'
+      path: '/validation'
+      fullPath: '/revenue/commissions/validation'
+      preLoaderRoute: typeof RevenueCommissionsValidationRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
+    }
+    '/revenue/commissions/validation/$batchId': {
+      id: '/revenue/commissions/validation/$batchId'
+      path: '/validation/$batchId'
+      fullPath: '/revenue/commissions/validation/$batchId'
+      preLoaderRoute: typeof RevenueCommissionsValidationBatchIdRouteImport
+      parentRoute: typeof RevenueCommissionsRoute
+    }
     '/revenue/statements/': {
       id: '/revenue/statements/'
       path: '/'
@@ -239,15 +332,33 @@ const RevenueStatementsRouteChildren: RevenueStatementsRouteChildren = {
 
 const RevenueStatementsRouteWithChildren = RevenueStatementsRoute._addFileChildren(RevenueStatementsRouteChildren)
 
+interface RevenueCommissionsRouteChildren {
+  RevenueCommissionsIndexRoute: typeof RevenueCommissionsIndexRoute
+  RevenueCommissionsResultsRoute: typeof RevenueCommissionsResultsRoute
+  RevenueCommissionsSummaryRoute: typeof RevenueCommissionsSummaryRoute
+  RevenueCommissionsValidationRoute: typeof RevenueCommissionsValidationRoute
+  RevenueCommissionsValidationBatchIdRoute: typeof RevenueCommissionsValidationBatchIdRoute
+}
+
+const RevenueCommissionsRouteChildren: RevenueCommissionsRouteChildren = {
+  RevenueCommissionsIndexRoute: RevenueCommissionsIndexRoute,
+  RevenueCommissionsResultsRoute: RevenueCommissionsResultsRoute,
+  RevenueCommissionsSummaryRoute: RevenueCommissionsSummaryRoute,
+  RevenueCommissionsValidationRoute: RevenueCommissionsValidationRoute,
+  RevenueCommissionsValidationBatchIdRoute: RevenueCommissionsValidationBatchIdRoute,
+}
+
+const RevenueCommissionsRouteWithChildren = RevenueCommissionsRoute._addFileChildren(RevenueCommissionsRouteChildren)
+
 interface RevenueRouteChildren {
-  RevenueCommissionsRoute: typeof RevenueCommissionsRoute
+  RevenueCommissionsRoute: typeof RevenueCommissionsRouteWithChildren
   RevenueImportsRoute: typeof RevenueImportsRoute
   RevenueStatementsRoute: typeof RevenueStatementsRouteWithChildren
   RevenueIndexRoute: typeof RevenueIndexRoute
 }
 
 const RevenueRouteChildren: RevenueRouteChildren = {
-  RevenueCommissionsRoute: RevenueCommissionsRoute,
+  RevenueCommissionsRoute: RevenueCommissionsRouteWithChildren,
   RevenueImportsRoute: RevenueImportsRoute,
   RevenueStatementsRoute: RevenueStatementsRouteWithChildren,
   RevenueIndexRoute: RevenueIndexRoute,
