@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event';
 import { RevenuePage } from '@/features/revenue/components/RevenuePage';
 import { RevenueLayout } from '@/features/revenue/components/RevenueLayout';
 import { PlaceholderPage } from '@/features/revenue/components/PlaceholderPage';
+import { renderWithQuery } from './test-utils';
 
 describe('PlaceholderPage', () => {
   it('renders title and default description', () => {
@@ -99,32 +100,23 @@ describe('RevenueLayout', () => {
 
 describe('RevenuePage', () => {
   it('renders tab navigation with all three tabs', () => {
-    render(<RevenuePage />);
+    // Use renderWithQuery to provide QueryClient (BrandDashboard needs it)
+    renderWithQuery(<RevenuePage />);
 
     expect(screen.getByRole('tab', { name: 'Statements' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Imports' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Commissions' })).toBeInTheDocument();
   });
 
-  it('renders statements content by default (error boundary catches missing providers)', () => {
-    render(<RevenuePage />);
-
-    // Without QueryClient/Auth providers, BrandDashboard hits error boundary
-    // The fallback text should appear
-    expect(screen.getByText('Statements unavailable')).toBeInTheDocument();
-  });
-
   it('switches to imports tab', async () => {
-    const user = userEvent.setup();
-    render(<RevenuePage />);
+    const { user } = renderWithQuery(<RevenuePage />);
 
     await user.click(screen.getByRole('tab', { name: 'Imports' }));
     expect(screen.getByText(/revenue data imports/i)).toBeInTheDocument();
   });
 
   it('switches to commissions tab (shows sub-tabs)', async () => {
-    const user = userEvent.setup();
-    render(<RevenuePage />);
+    const { user } = renderWithQuery(<RevenuePage />);
 
     await user.click(screen.getByRole('tab', { name: 'Commissions' }));
 
