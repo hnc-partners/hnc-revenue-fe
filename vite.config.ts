@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import { federation } from '@module-federation/vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { resolve } from 'path';
@@ -14,6 +15,7 @@ export default defineConfig({
     ? 'https://hncms-revenue-fe.scarif-0.duckdns.org/'
     : '/',
   plugins: [
+    TanStackRouterVite(),
     react(),
     // Only enable Module Federation for production builds
     // In dev mode, run as standalone app (faster, simpler)
