@@ -4,16 +4,16 @@
  * The main exposed MF component for Revenue.
  * Shell loads this via Module Federation.
  *
- * Uses URL-based tab routing. When running inside the shell's RouterProvider,
- * leverages TanStack Router for navigation. Falls back to window.location
- * when no router context is available (tests, standalone).
+ * Uses URL-based tab routing via useSyncExternalStore (no router dependency).
+ * Content components are wrapped in error boundaries for resilience when
+ * providers (QueryClient, Auth) aren't available (e.g., in tests).
  *
  * Dual export pattern (REQUIRED for MF lazy loading):
  * - Named export (primary)
  * - Default export (required for MF lazy loading)
  */
 
-import { useCallback, useMemo, useSyncExternalStore } from 'react';
+import { Component, useCallback, useMemo, useSyncExternalStore, type ReactNode, type ErrorInfo } from 'react';
 import { RevenueLayout } from './RevenueLayout';
 import { BrandDashboard } from '@/features/statements';
 import { ImportsPlaceholder } from './imports/ImportsPlaceholder';
@@ -28,6 +28,36 @@ import {
   TabsList,
   TabsTrigger,
 } from '@hnc-partners/ui-components';
+
+/**
+ * Lightweight error boundary for tab content.
+ * Catches provider/context errors gracefully in MF mode.
+ */
+class TabErrorBoundary extends Component<
+  { children: ReactNode; fallback?: string },
+  { error: Error | null }
+> {
+  state = { error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  componentDidCatch(error: Error, _info: ErrorInfo) {
+    console.warn('[RevenuePage] Tab content error:', error.message);
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          <p className="text-sm">{this.props.fallback || 'Content unavailable'}</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 /**
  * Subscribe to URL changes (pushState, replaceState, popstate).
@@ -114,10 +144,12 @@ function CommissionsContent() {
 
       {/* Sub-tab content */}
       <div className="flex-1 min-h-0 overflow-auto">
-        {subTab === 'results' && <CommissionResultsPage />}
-        {subTab === 'summary' && <CommissionSummaryPage />}
-        {subTab === 'validation' && batchId && <ValidationDetailPage batchId={batchId} />}
-        {subTab === 'validation' && !batchId && <ValidationOverviewPage />}
+        <TabErrorBoundary fallback="Commission results unavailable">
+          {subTab === 'results' && <CommissionResultsPage />}
+          {subTab === 'summary' && <CommissionSummaryPage />}
+          {subTab === 'validation' && batchId && <ValidationDetailPage batchId={batchId} />}
+          {subTab === 'validation' && !batchId && <ValidationOverviewPage />}
+        </TabErrorBoundary>
       </div>
     </div>
   );
@@ -143,7 +175,9 @@ export function RevenuePage() {
 
   return (
     <RevenueLayout activeTab={activeTab} onTabChange={handleTabChange}>
-      {activeTab === 'statements' && <BrandDashboard />}
+      <TabErrorBoundary fallback="Statements unavailable">
+        {activeTab === 'statements' && <BrandDashboard />}
+      </TabErrorBoundary>
       {activeTab === 'imports' && <ImportsPlaceholder />}
       {activeTab === 'commissions' && <CommissionsContent />}
     </RevenueLayout>

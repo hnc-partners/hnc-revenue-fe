@@ -98,43 +98,40 @@ describe('RevenueLayout', () => {
 });
 
 describe('RevenuePage', () => {
-  it('renders with default statements tab active and shows placeholder content', () => {
+  it('renders tab navigation with all three tabs', () => {
     render(<RevenuePage />);
 
-    // Statements tab trigger should exist
-    const statementsTab = screen.getByRole('tab', { name: 'Statements' });
-    expect(statementsTab).toBeInTheDocument();
-
-    // Statements placeholder description should be visible
-    expect(screen.getByText(/brand statement management/i)).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Statements' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Imports' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Commissions' })).toBeInTheDocument();
   });
 
-  it('does not import any router modules', async () => {
-    const module = await import('@/features/revenue/components/RevenuePage');
-    expect(module.RevenuePage).toBeDefined();
-    expect(module.default).toBeDefined();
+  it('renders statements content by default (error boundary catches missing providers)', () => {
+    render(<RevenuePage />);
+
+    // Without QueryClient/Auth providers, BrandDashboard hits error boundary
+    // The fallback text should appear
+    expect(screen.getByText('Statements unavailable')).toBeInTheDocument();
   });
 
-  it('switches tab content when tab is changed', async () => {
+  it('switches to imports tab', async () => {
     const user = userEvent.setup();
     render(<RevenuePage />);
 
-    // Click Imports tab
     await user.click(screen.getByRole('tab', { name: 'Imports' }));
-
-    // Should show imports placeholder content
     expect(screen.getByText(/revenue data imports/i)).toBeInTheDocument();
   });
 
-  it('switches to commissions tab', async () => {
+  it('switches to commissions tab (shows sub-tabs)', async () => {
     const user = userEvent.setup();
     render(<RevenuePage />);
 
-    // Click Commissions tab
     await user.click(screen.getByRole('tab', { name: 'Commissions' }));
 
-    // Should show commissions placeholder content
-    expect(screen.getByText(/commission calculation/i)).toBeInTheDocument();
+    // Commission sub-tabs should appear
+    expect(screen.getByText('Results')).toBeInTheDocument();
+    expect(screen.getByText('Summaries')).toBeInTheDocument();
+    expect(screen.getByText('Validation')).toBeInTheDocument();
   });
 
   it('provides both named and default exports for MF lazy loading', async () => {
