@@ -48,13 +48,8 @@ export default defineConfig({
   build: {
     ...hncBuildConfig(isProduction),
     chunkSizeWarningLimit: 550,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'route-tree': ['./src/routeTree.gen.ts'],
-          'tanstack-router': ['@tanstack/react-router'],
-        },
-      },
-    },
+    // NOTE: Do NOT add manualChunks here — MF plugin must control chunk splitting
+    // to avoid ESM top-level await deadlocks between remoteEntry and loadShare wrappers.
+    // See S-1368: manualChunks for @tanstack/react-router caused circular TLA deadlock.
   },
 });
