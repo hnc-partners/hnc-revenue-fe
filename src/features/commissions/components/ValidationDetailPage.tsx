@@ -261,13 +261,15 @@ function AllSkippedEmptyState() {
 
 interface ValidationDetailPageProps {
   batchId: string;
+  /** Optional callback for back button — used in MF mode where router navigation is unavailable */
+  onBack?: () => void;
 }
 
 // ---------------------------------------------------------------------------
 // Main Component
 // ---------------------------------------------------------------------------
 
-export function ValidationDetailPage({ batchId }: ValidationDetailPageProps) {
+export function ValidationDetailPage({ batchId, onBack }: ValidationDetailPageProps) {
   const navigate = useSafeNavigate();
   const [activeTab, setActiveTab] = useState<StatusTabId>('all');
 
@@ -302,8 +304,12 @@ export function ValidationDetailPage({ batchId }: ValidationDetailPageProps) {
   });
 
   const handleBack = useCallback(() => {
-    navigate({ to: '/revenue/commissions/validation' });
-  }, [navigate]);
+    if (onBack) {
+      onBack();
+    } else {
+      navigate({ to: '/revenue/commissions/validation' });
+    }
+  }, [navigate, onBack]);
 
   const handleRunValidation = useCallback(() => {
     runValidation.mutate();

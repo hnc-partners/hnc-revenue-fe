@@ -258,7 +258,12 @@ function Pagination({ meta, currentPage, onPageChange }: PaginationProps) {
 
 const DEFAULT_LIMIT = 25;
 
-export function ValidationOverviewPage() {
+interface ValidationOverviewPageProps {
+  /** Optional callback for row click — used in MF mode where router navigation is unavailable */
+  onBatchSelect?: (batchId: string) => void;
+}
+
+export function ValidationOverviewPage({ onBatchSelect }: ValidationOverviewPageProps = {}) {
   const navigate = useSafeNavigate();
   const [page, setPage] = useState(1);
 
@@ -277,12 +282,16 @@ export function ValidationOverviewPage() {
 
   const handleRowClick = useCallback(
     (row: ValidationOverview) => {
-      navigate({
-        to: '/revenue/commissions/validation/$batchId',
-        params: { batchId: row.batch_id },
-      });
+      if (onBatchSelect) {
+        onBatchSelect(row.batch_id);
+      } else {
+        navigate({
+          to: '/revenue/commissions/validation/$batchId',
+          params: { batchId: row.batch_id },
+        });
+      }
     },
-    [navigate]
+    [navigate, onBatchSelect]
   );
 
   const handlePageChange = useCallback((newPage: number) => {
