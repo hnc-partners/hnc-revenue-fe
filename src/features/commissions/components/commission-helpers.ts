@@ -14,9 +14,10 @@ import type { CommissionDealType } from '../types';
  * Parse a decimal string and format as currency.
  * API returns decimal values as strings (e.g. "1234.56").
  */
-export function formatCurrency(amount: string, currency: string): string {
+export function formatCurrency(amount: string | null | undefined, currency: string | null | undefined): string {
+  if (amount == null) return '—';
   const num = parseFloat(amount);
-  if (isNaN(num)) return `${currency} 0.00`;
+  if (isNaN(num)) return '—';
 
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -29,9 +30,10 @@ export function formatCurrency(amount: string, currency: string): string {
 /**
  * Parse a decimal string and format as percentage.
  */
-export function formatPercent(value: string): string {
+export function formatPercent(value: string | null | undefined): string {
+  if (value == null) return '—';
   const num = parseFloat(value);
-  if (isNaN(num)) return '0%';
+  if (isNaN(num)) return '—';
   // API stores as decimal (e.g. 0.15 for 15%)
   return `${(num * 100).toFixed(2)}%`;
 }
@@ -39,9 +41,11 @@ export function formatPercent(value: string): string {
 /**
  * Format a period range as a readable string.
  */
-export function formatPeriod(start: string, end: string): string {
+export function formatPeriod(start: string | null | undefined, end: string | null | undefined): string {
+  if (!start || !end) return '—';
   const startDate = new Date(start);
   const endDate = new Date(end);
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return '—';
   const fmt = new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
@@ -53,8 +57,10 @@ export function formatPeriod(start: string, end: string): string {
 /**
  * Format a date string for compact table display.
  */
-export function formatDateShort(dateStr: string): string {
+export function formatDateShort(dateStr: string | null | undefined): string {
+  if (!dateStr) return '—';
   const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return '—';
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
@@ -89,7 +95,8 @@ const SHARE_CATEGORY_BADGES: Record<string, BadgeConfig> = {
  * Get badge config for a share category code.
  * Returns colored badge config for known categories, neutral for unknown.
  */
-export function shareCategoryBadgeConfig(code: string): BadgeConfig {
+export function shareCategoryBadgeConfig(code: string | null | undefined): BadgeConfig {
+  if (!code) return { className: 'text-muted-foreground border-border', label: '—' };
   return (
     SHARE_CATEGORY_BADGES[code.toUpperCase()] ?? {
       className: 'text-muted-foreground border-border',

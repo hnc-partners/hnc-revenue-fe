@@ -21,7 +21,11 @@ describe('formatCurrency', () => {
 
   it('handles NaN input', () => {
     const result = formatCurrency('invalid', 'USD');
-    expect(result).toBe('USD 0.00');
+    expect(result).toBe('—');
+  });
+
+  it('handles null input', () => {
+    expect(formatCurrency(null, 'USD')).toBe('—');
   });
 
   it('uses EUR as default currency when empty', () => {
@@ -45,7 +49,11 @@ describe('formatPercent', () => {
   });
 
   it('handles NaN', () => {
-    expect(formatPercent('invalid')).toBe('0%');
+    expect(formatPercent('invalid')).toBe('—');
+  });
+
+  it('handles null', () => {
+    expect(formatPercent(null)).toBe('—');
   });
 
   it('formats 100%', () => {
