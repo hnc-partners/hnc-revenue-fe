@@ -9,7 +9,6 @@
  */
 
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CreateBatchStep } from './CreateBatchStep';
@@ -102,9 +101,11 @@ function StepIndicator({ currentStep }: StepIndicatorProps) {
 // Main Component
 // ---------------------------------------------------------------------------
 
-export function ImportWizard() {
-  const navigate = useNavigate();
+interface ImportWizardProps {
+  onBack?: () => void;
+}
 
+export function ImportWizard({ onBack }: ImportWizardProps) {
   const [state, setState] = useState<WizardState>({
     step: 1,
     batch: null,
@@ -124,12 +125,11 @@ export function ImportWizard() {
   };
 
   const handleUploadSkip = () => {
-    // Go back to imports dashboard
-    navigate({ to: '/revenue/imports' });
+    onBack?.();
   };
 
   const handleCancel = () => {
-    navigate({ to: '/revenue/imports' });
+    onBack?.();
   };
 
   return (

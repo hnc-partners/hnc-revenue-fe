@@ -10,11 +10,8 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ImportWizard } from '../ImportWizard';
 
-// Mock router — external navigation service
-const mockNavigate = vi.fn();
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => mockNavigate,
-}));
+// onBack callback — replaces router navigation
+const mockOnBack = vi.fn();
 
 // Mock API hooks — external fetch layer
 const mockUseBrandConfigs = vi.fn().mockReturnValue({
@@ -66,7 +63,7 @@ function renderWithQuery(ui: React.ReactElement) {
 
 describe('ImportWizard', () => {
   beforeEach(() => {
-    mockNavigate.mockReset();
+    mockOnBack.mockReset();
     mockUseBrandConfigs.mockReturnValue({
       data: [
         { brandId: 'b-1', brandName: 'Brand A', periodGranularity: 'monthly', expectedFileTypes: ['commission'] },
@@ -80,12 +77,12 @@ describe('ImportWizard', () => {
   });
 
   it('renders "New Import" header', () => {
-    renderWithQuery(<ImportWizard />);
+    renderWithQuery(<ImportWizard onBack={mockOnBack} />);
     expect(screen.getByText('New Import')).toBeInTheDocument();
   });
 
   it('renders step indicator with 3 steps', () => {
-    renderWithQuery(<ImportWizard />);
+    renderWithQuery(<ImportWizard onBack={mockOnBack} />);
     const nav = screen.getByLabelText('Wizard progress');
     expect(nav).toBeInTheDocument();
     // Step indicator labels are in the nav, step content heading duplicates "Create Batch"
@@ -97,13 +94,13 @@ describe('ImportWizard', () => {
   });
 
   it('shows step 1 as current initially', () => {
-    renderWithQuery(<ImportWizard />);
+    renderWithQuery(<ImportWizard onBack={mockOnBack} />);
     const step1 = screen.getByText('1');
     expect(step1.closest('[aria-current="step"]')).toBeInTheDocument();
   });
 
   it('renders CreateBatchStep content in step 1', () => {
-    renderWithQuery(<ImportWizard />);
+    renderWithQuery(<ImportWizard onBack={mockOnBack} />);
     // CreateBatchStep renders brand selector form
     expect(screen.getByText('Brand')).toBeInTheDocument();
     expect(screen.getByText('Period Start')).toBeInTheDocument();
@@ -111,17 +108,15 @@ describe('ImportWizard', () => {
   });
 
   it('navigates to imports on cancel', async () => {
-    renderWithQuery(<ImportWizard />);
+    renderWithQuery(<ImportWizard onBack={mockOnBack} />);
 
     const user = userEvent.setup();
     await user.click(screen.getByText('Cancel'));
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/revenue/imports' })
-    );
+    expect(mockOnBack).toHaveBeenCalled();
   });
 
   it('renders step content heading for step 1', () => {
-    renderWithQuery(<ImportWizard />);
+    renderWithQuery(<ImportWizard onBack={mockOnBack} />);
     // Step 1 title appears as heading inside the content card
     // "Create Batch" appears both in step indicator and as content heading
     const headings = screen.getAllByText('Create Batch');
@@ -129,7 +124,7 @@ describe('ImportWizard', () => {
   });
 
   it('renders connector lines between steps', () => {
-    const { container } = renderWithQuery(<ImportWizard />);
+    const { container } = renderWithQuery(<ImportWizard onBack={mockOnBack} />);
     // The nav should have connector lines (divs between steps)
     const nav = screen.getByLabelText('Wizard progress');
     const items = nav.querySelectorAll('li');
@@ -139,7 +134,7 @@ describe('ImportWizard', () => {
   });
 
   it('shows step 3 label in step indicator', () => {
-    renderWithQuery(<ImportWizard />);
+    renderWithQuery(<ImportWizard onBack={mockOnBack} />);
     expect(screen.getByText('Process')).toBeInTheDocument();
   });
 
@@ -150,7 +145,7 @@ describe('ImportWizard', () => {
       error: null,
     });
 
-    const { container } = renderWithQuery(<ImportWizard />);
+    const { container } = renderWithQuery(<ImportWizard onBack={mockOnBack} />);
     expect(container.querySelector('[aria-busy="true"]')).toBeInTheDocument();
   });
 });

@@ -11,10 +11,16 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ImportDashboard } from '../ImportDashboard';
 import type { ImportBatch, CollectionResponse } from '../../types';
 
-// Mock router — external navigation service
-const mockNavigate = vi.fn();
-vi.mock('@/lib/use-safe-navigate', () => ({
-  useSafeNavigate: () => mockNavigate,
+// Mock sub-components used for view switching
+vi.mock('../BatchDetail', () => ({
+  BatchDetail: ({ batchId, onBack }: { batchId: string; onBack: () => void }) => (
+    <div data-testid="batch-detail">Batch Detail: {batchId} <button onClick={onBack}>Back</button></div>
+  ),
+}));
+vi.mock('../ImportWizard', () => ({
+  ImportWizard: ({ onBack }: { onBack: () => void }) => (
+    <div data-testid="import-wizard">Import Wizard <button onClick={onBack}>Back</button></div>
+  ),
 }));
 
 // Mock API hooks — external fetch layer
@@ -74,7 +80,6 @@ function renderWithQuery(ui: React.ReactElement) {
 
 describe('ImportDashboard', () => {
   beforeEach(() => {
-    mockNavigate.mockReset();
     mockRefetch.mockReset();
     mockUseImportBatches.mockReset();
     mockUsePurgeBatch.mockReturnValue({ mutate: vi.fn(), isPending: false });
@@ -136,9 +141,7 @@ describe('ImportDashboard', () => {
     // Empty state has its own New Import button
     const buttons = screen.getAllByText('New Import');
     await user.click(buttons[buttons.length - 1]);
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/revenue/imports/new' })
-    );
+    expect(screen.getByTestId('import-wizard')).toBeInTheDocument();
   });
 
   it('renders batch table when data is available', () => {
@@ -182,9 +185,7 @@ describe('ImportDashboard', () => {
     renderWithQuery(<ImportDashboard />);
 
     await user.click(screen.getByText('New Import'));
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/revenue/imports/new' })
-    );
+    expect(screen.getByTestId('import-wizard')).toBeInTheDocument();
   });
 
   it('navigates to batch detail on row click', async () => {
@@ -199,12 +200,8 @@ describe('ImportDashboard', () => {
     renderWithQuery(<ImportDashboard />);
 
     await user.click(screen.getByText('ClickMe'));
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({
-        to: '/revenue/imports/$batchId',
-        params: { batchId: 'batch-xyz' },
-      })
-    );
+    expect(screen.getByTestId('batch-detail')).toBeInTheDocument();
+    expect(screen.getByText('Batch Detail: batch-xyz')).toBeInTheDocument();
   });
 
   it('shows purge button only for rolled_back batches', () => {

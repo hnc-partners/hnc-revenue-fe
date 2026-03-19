@@ -7,7 +7,6 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import {
   Button,
   Badge,
@@ -308,7 +307,8 @@ interface BatchActionsProps {
 }
 
 function BatchActions({ batch, onRollback, onPurge }: BatchActionsProps) {
-  const navigate = useNavigate();
+  // Upload Files button for pending batches — no-op in MF mode (no router context)
+  const noopNav = () => {};
 
   switch (batch.status) {
     case 'processed':
@@ -338,9 +338,7 @@ function BatchActions({ batch, onRollback, onPurge }: BatchActionsProps) {
     case 'pending':
       return (
         <Button
-          onClick={() =>
-            navigate({ to: '/revenue/imports/new' })
-          }
+          onClick={noopNav}
         >
           <Upload className="h-4 w-4 mr-2" />
           Upload Files
@@ -447,10 +445,10 @@ const TABS: { id: DetailTab; label: string }[] = [
 
 interface BatchDetailProps {
   batchId: string;
+  onBack?: () => void;
 }
 
-export function BatchDetail({ batchId }: BatchDetailProps) {
-  const navigate = useNavigate();
+export function BatchDetail({ batchId, onBack }: BatchDetailProps) {
   const [activeTab, setActiveTab] = useState<DetailTab>('files');
   const [rollbackBatch, setRollbackBatch] = useState<ImportBatchDetail | null>(null);
   const [purgeBatchTarget, setPurgeBatchTarget] = useState<ImportBatchDetail | null>(null);
@@ -465,13 +463,13 @@ export function BatchDetail({ batchId }: BatchDetailProps) {
   const batch = response?.data;
 
   const handleBack = useCallback(() => {
-    navigate({ to: '/revenue/imports' });
-  }, [navigate]);
+    onBack?.();
+  }, [onBack]);
 
   const handlePurgeSuccess = useCallback(() => {
-    // Navigate back to imports list after purge
-    navigate({ to: '/revenue/imports' });
-  }, [navigate]);
+    // Return to imports list after purge
+    onBack?.();
+  }, [onBack]);
 
   if (isLoading) {
     return <PageSkeleton />;

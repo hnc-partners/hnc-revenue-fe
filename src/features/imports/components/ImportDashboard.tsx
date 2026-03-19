@@ -6,7 +6,6 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import { useSafeNavigate } from '@/lib/use-safe-navigate';
 import {
   useReactTable,
   getCoreRowModel,
@@ -47,6 +46,8 @@ import {
 } from 'lucide-react';
 import { useImportBatches, usePurgeBatch, useBrandConfigs } from '../api';
 import { BatchStatusBadge } from './BatchStatusBadge';
+import { BatchDetail } from './BatchDetail';
+import { ImportWizard } from './ImportWizard';
 import type {
   ImportBatch,
   ImportBatchFilters,
@@ -137,9 +138,7 @@ function ErrorState({
   );
 }
 
-function EmptyState() {
-  const navigate = useSafeNavigate();
-
+function EmptyState({ onNewImport }: { onNewImport: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <Upload className="h-12 w-12 text-muted-foreground/50 mb-4" />
@@ -149,7 +148,7 @@ function EmptyState() {
       <p className="text-sm text-muted-foreground max-w-sm mb-4">
         Click New Import to get started.
       </p>
-      <Button onClick={() => navigate({ to: '/revenue/imports/new' })}>
+      <Button onClick={onNewImport}>
         <Plus className="h-4 w-4 mr-2" />
         New Import
       </Button>
@@ -580,8 +579,13 @@ function ImportBatchesTable({
 // Main Component
 // ---------------------------------------------------------------------------
 
+type ImportsView =
+  | { type: 'list' }
+  | { type: 'detail'; batchId: string }
+  | { type: 'wizard' };
+
 export function ImportDashboard() {
-  const navigate = useSafeNavigate();
+  const [view, setView] = useState<ImportsView>({ type: 'list' });
 
   const [filters, setFilters] = useState<ImportBatchFilters>({
     page: 1,
@@ -610,10 +614,21 @@ export function ImportDashboard() {
 
   const handleRowClick = useCallback(
     (batch: ImportBatch) => {
-      navigate({ to: '/revenue/imports/$batchId', params: { batchId: batch.id } });
+      setView({ type: 'detail', batchId: batch.id });
     },
-    [navigate]
+    []
   );
+
+  const handleBack = useCallback(() => setView({ type: 'list' }), []);
+  const handleNewImport = useCallback(() => setView({ type: 'wizard' }), []);
+
+  // Sub-views
+  if (view.type === 'detail') {
+    return <BatchDetail batchId={view.batchId} onBack={handleBack} />;
+  }
+  if (view.type === 'wizard') {
+    return <ImportWizard onBack={handleBack} />;
+  }
 
   return (
     <div className="flex flex-col h-full w-full overflow-hidden">
@@ -621,7 +636,7 @@ export function ImportDashboard() {
       <div className="px-4 sm:px-6 lg:px-8 pt-6">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-xl font-semibold text-foreground">Imports</h1>
-          <Button onClick={() => navigate({ to: '/revenue/imports/new' })}>
+          <Button onClick={handleNewImport}>
             <Plus className="h-4 w-4 mr-2" />
             New Import
           </Button>
@@ -646,7 +661,7 @@ export function ImportDashboard() {
             onRetry={() => refetch()}
           />
         ) : !response?.data || response.data.length === 0 ? (
-          <EmptyState />
+          <EmptyState onNewImport={handleNewImport} />
         ) : (
           <ImportBatchesTable
             data={response.data}

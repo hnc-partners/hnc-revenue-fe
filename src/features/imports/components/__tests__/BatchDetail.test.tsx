@@ -11,11 +11,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BatchDetail } from '../BatchDetail';
 import type { ImportBatchDetail } from '../../types';
 
-// Mock router — external navigation service
-const mockNavigate = vi.fn();
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => mockNavigate,
-}));
+// onBack callback — replaces router navigation
+const mockOnBack = vi.fn();
 
 // Mock API hooks — external fetch layer
 const mockUseImportBatch = vi.fn();
@@ -77,7 +74,7 @@ function renderWithQuery(ui: React.ReactElement) {
 
 describe('BatchDetail', () => {
   beforeEach(() => {
-    mockNavigate.mockReset();
+    mockOnBack.mockReset();
     mockRefetch.mockReset();
     mockUseImportBatch.mockReset();
     mockUseRollbackBatch.mockReturnValue({ mutate: vi.fn(), isPending: false });
@@ -92,7 +89,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    const { container } = renderWithQuery(<BatchDetail batchId="batch-1" />);
+    const { container } = renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(container.querySelector('[aria-busy="true"]')).toBeInTheDocument();
   });
 
@@ -104,7 +101,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     expect(screen.getByText(/could not load batch details/i)).toBeInTheDocument();
 
@@ -121,7 +118,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText('Test Brand')).toBeInTheDocument();
     expect(screen.getByText('Processed')).toBeInTheDocument();
   });
@@ -135,12 +132,10 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Back to Imports'));
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/revenue/imports' })
-    );
+    expect(mockOnBack).toHaveBeenCalled();
   });
 
   it('renders tabs for Files, Processing Results, and Audit Log', () => {
@@ -151,7 +146,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText('Files')).toBeInTheDocument();
     expect(screen.getByText('Processing Results')).toBeInTheDocument();
     expect(screen.getByText('Audit Log')).toBeInTheDocument();
@@ -165,7 +160,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText('Rollback')).toBeInTheDocument();
   });
 
@@ -177,7 +172,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText('Purge')).toBeInTheDocument();
   });
 
@@ -189,7 +184,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText('Upload Files')).toBeInTheDocument();
   });
 
@@ -201,7 +196,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.queryByText('Rollback')).not.toBeInTheDocument();
     expect(screen.queryByText('Purge')).not.toBeInTheDocument();
     expect(screen.queryByText('Upload Files')).not.toBeInTheDocument();
@@ -222,7 +217,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText(/processing failed with 1 validation error/i)).toBeInTheDocument();
   });
 
@@ -235,7 +230,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Rollback'));
     expect(screen.getByText('Rollback Import Batch')).toBeInTheDocument();
@@ -251,7 +246,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Purge'));
     expect(screen.getByText('Purge Import Batch')).toBeInTheDocument();
@@ -266,7 +261,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Processing Results'));
     // Should render BatchResultsTab content
@@ -281,7 +276,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText('Created by: john')).toBeInTheDocument();
   });
 
@@ -293,7 +288,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    const { container } = renderWithQuery(<BatchDetail batchId="batch-1" />);
+    const { container } = renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(container.innerHTML).toBe('');
   });
 
@@ -305,7 +300,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     const recalcButton = screen.getByText('Recalculate Commissions');
     expect(recalcButton.closest('button')).toBeDisabled();
   });
@@ -319,12 +314,10 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
-    await user.click(screen.getByText('Upload Files'));
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/revenue/imports/new' })
-    );
+    // Upload Files button exists for pending batches (no-op in MF mode)
+    expect(screen.getByText('Upload Files')).toBeInTheDocument();
   });
 
   it('shows processing duration when both timestamps exist', () => {
@@ -340,7 +333,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText('Duration: 30s')).toBeInTheDocument();
   });
 
@@ -357,7 +350,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.queryByText(/duration/i)).not.toBeInTheDocument();
   });
 
@@ -377,7 +370,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Audit Log'));
     // BatchLogsTab should render — it shows logs or empty state
@@ -401,7 +394,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText(/processing failed with 3 validation errors/i)).toBeInTheDocument();
   });
 
@@ -418,7 +411,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.queryByText(/processing failed with/i)).not.toBeInTheDocument();
   });
 
@@ -441,7 +434,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     // Open rollback dialog
     await user.click(screen.getByText('Rollback'));
@@ -476,7 +469,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     // Open purge dialog
     await user.click(screen.getByText('Purge'));
@@ -511,7 +504,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Purge'));
     const purgeButtons = screen.getAllByText('Purge');
@@ -521,9 +514,7 @@ describe('BatchDetail', () => {
     await user.click(confirmButton!);
 
     // After purge success, handlePurgeSuccess navigates back
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/revenue/imports' })
-    );
+    expect(mockOnBack).toHaveBeenCalled();
   });
 
   it('shows rollback error toast on failure', async () => {
@@ -547,7 +538,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Rollback'));
     const rollbackButtons = screen.getAllByText('Rollback');
@@ -580,7 +571,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Purge'));
     const purgeButtons = screen.getAllByText('Purge');
@@ -606,7 +597,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Rollback'));
     expect(screen.getByText('Rolling back...')).toBeInTheDocument();
@@ -626,7 +617,7 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Purge'));
     expect(screen.getByText('Purging...')).toBeInTheDocument();
@@ -641,12 +632,10 @@ describe('BatchDetail', () => {
     });
 
     const user = userEvent.setup();
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     await user.click(screen.getByText('Back to Imports'));
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/revenue/imports' })
-    );
+    expect(mockOnBack).toHaveBeenCalled();
   });
 
   it('displays processing started/completed timestamps', () => {
@@ -662,7 +651,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.getByText(/Started:/)).toBeInTheDocument();
     expect(screen.getByText(/Completed:/)).toBeInTheDocument();
   });
@@ -675,7 +664,7 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    renderWithQuery(<BatchDetail batchId="batch-1" />);
+    renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
     expect(screen.queryByText('Rollback')).not.toBeInTheDocument();
     expect(screen.queryByText('Purge')).not.toBeInTheDocument();
     expect(screen.queryByText('Upload Files')).not.toBeInTheDocument();
