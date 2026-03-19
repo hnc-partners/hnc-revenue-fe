@@ -7,12 +7,15 @@ import type {
   CommissionSummary,
 } from '../../types';
 
-// Mock TanStack Router
+// Mock MF-safe navigation and search
 const mockNavigate = vi.fn();
+vi.mock('@/lib/use-safe-navigate', () => ({
+  useSafeNavigate: () => mockNavigate,
+}));
+
 const mockUseSearch = vi.fn();
-vi.mock('@tanstack/react-router', () => ({
-  useSearch: (...args: unknown[]) => mockUseSearch(...args),
-  useNavigate: () => mockNavigate,
+vi.mock('@/lib/useSafeSearch', () => ({
+  useSafeSearch: (...args: unknown[]) => mockUseSearch(...args),
 }));
 
 // Mock API hooks

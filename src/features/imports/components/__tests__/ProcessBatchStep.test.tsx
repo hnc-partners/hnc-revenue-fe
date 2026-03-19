@@ -10,10 +10,10 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ProcessBatchStep } from '../ProcessBatchStep';
 
-// Mock router — external navigation service
+// Mock MF-safe navigation
 const mockNavigate = vi.fn();
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => mockNavigate,
+vi.mock('@/lib/use-safe-navigate', () => ({
+  useSafeNavigate: () => mockNavigate,
 }));
 
 // Mock API hooks — external fetch layer

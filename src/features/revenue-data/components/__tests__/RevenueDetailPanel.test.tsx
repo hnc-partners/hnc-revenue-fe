@@ -10,10 +10,10 @@ import userEvent from '@testing-library/user-event';
 import { RevenueDetailPanel } from '../RevenueDetailPanel';
 import type { PlayerRevenue } from '../../types';
 
-// Mock router — external navigation service
+// Mock MF-safe navigation
 const mockNavigate = vi.fn();
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => mockNavigate,
+vi.mock('@/lib/use-safe-navigate', () => ({
+  useSafeNavigate: () => mockNavigate,
 }));
 
 function makeRecord(overrides: Partial<PlayerRevenue> = {}): PlayerRevenue {

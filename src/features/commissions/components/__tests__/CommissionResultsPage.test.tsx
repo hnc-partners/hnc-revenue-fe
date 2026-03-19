@@ -4,10 +4,10 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { CollectionResponse, CommissionResult } from '../../types';
 
-// Mock TanStack Router
+// Mock MF-safe search
 const mockUseSearch = vi.fn();
-vi.mock('@tanstack/react-router', () => ({
-  useSearch: (...args: unknown[]) => mockUseSearch(...args),
+vi.mock('@/lib/useSafeSearch', () => ({
+  useSafeSearch: (...args: unknown[]) => mockUseSearch(...args),
 }));
 
 // Mock commission results hook
