@@ -313,7 +313,6 @@ describe('BatchDetail', () => {
       refetch: mockRefetch,
     });
 
-    const user = userEvent.setup();
     renderWithQuery(<BatchDetail batchId="batch-1" onBack={mockOnBack} />);
 
     // Upload Files button exists for pending batches (no-op in MF mode)
