@@ -8,11 +8,6 @@
  * The shell provides RouterProvider — exposed components MUST NOT
  * create their own router instance (M08/M09 compliance).
  *
- * NOTE: Route-based components (CommissionResultsPage, etc.) are available
- * in standalone dev mode via TanStack Router routes. In shell/MF mode,
- * this component renders simplified tab views until MF routing integration
- * is implemented (see FES-07 follow-up).
- *
  * Dual export pattern (REQUIRED for MF lazy loading):
  * - Named export (primary)
  * - Default export (required for MF lazy loading)
@@ -20,18 +15,22 @@
 
 import { useState } from 'react';
 import { RevenueLayout } from './RevenueLayout';
-import { StatementsPlaceholder } from './statements/StatementsPlaceholder';
-import { ImportsPlaceholder } from './imports/ImportsPlaceholder';
-import { CommissionsPlaceholder } from './commissions/CommissionsPlaceholder';
+import { BrandDashboard } from '@/features/statements';
+import { ImportDashboard } from '@/features/imports';
+import { CommissionResultsPage } from '@/features/commissions';
+import { RevenueBrowser } from '@/features/revenue-data';
+import { CoverageReport } from '@/features/coverage';
 
 export function RevenuePage() {
   const [activeTab, setActiveTab] = useState('statements');
 
   return (
     <RevenueLayout activeTab={activeTab} onTabChange={setActiveTab}>
-      {activeTab === 'statements' && <StatementsPlaceholder />}
-      {activeTab === 'imports' && <ImportsPlaceholder />}
-      {activeTab === 'commissions' && <CommissionsPlaceholder />}
+      {activeTab === 'statements' && <BrandDashboard />}
+      {activeTab === 'imports' && <ImportDashboard />}
+      {activeTab === 'commissions' && <CommissionResultsPage />}
+      {activeTab === 'data' && <RevenueBrowser />}
+      {activeTab === 'coverage' && <CoverageReport />}
     </RevenueLayout>
   );
 }
