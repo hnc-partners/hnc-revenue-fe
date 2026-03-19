@@ -7,7 +7,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import { useSearch } from '@tanstack/react-router';
+import { useSafeSearch } from '../../../lib/useSafeSearch';
 import { Skeleton, Button } from '@hnc-partners/ui-components';
 import { AlertTriangle, Percent } from 'lucide-react';
 import { useCommissionResults } from '../api';
@@ -86,7 +86,7 @@ const DEFAULT_LIMIT = 25;
 
 export function CommissionResultsPage() {
   // Read deep-link params from URL search
-  const search = useSearch({ strict: false }) as Record<string, string | undefined>;
+  const search = useSafeSearch();
 
   // Initialize filters from URL params
   const [filters, setFilters] = useState<FilterType>(() => ({

@@ -13,8 +13,8 @@ import type { ImportBatch, CollectionResponse } from '../../types';
 
 // Mock router — external navigation service
 const mockNavigate = vi.fn();
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => mockNavigate,
+vi.mock('@/lib/use-safe-navigate', () => ({
+  useSafeNavigate: () => mockNavigate,
 }));
 
 // Mock API hooks — external fetch layer

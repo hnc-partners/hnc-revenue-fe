@@ -6,7 +6,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useSafeNavigate } from '@/lib/use-safe-navigate';
 import {
   useReactTable,
   getCoreRowModel,
@@ -138,7 +138,7 @@ function ErrorState({
 }
 
 function EmptyState() {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
 
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -581,7 +581,7 @@ function ImportBatchesTable({
 // ---------------------------------------------------------------------------
 
 export function ImportDashboard() {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
 
   const [filters, setFilters] = useState<ImportBatchFilters>({
     page: 1,
