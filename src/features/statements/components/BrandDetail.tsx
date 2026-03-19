@@ -8,7 +8,6 @@
  */
 
 import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
 import {
   ArrowLeft,
   Calendar,
@@ -164,9 +163,11 @@ function BrandInfoHeader({ brand }: { brand: RMBrandConfigWithActivity }) {
 
 interface BrandDetailProps {
   brandCode: string;
+  /** Called when back button is clicked (returns to dashboard) */
+  onBack?: () => void;
 }
 
-export function BrandDetail({ brandCode }: BrandDetailProps) {
+export function BrandDetail({ brandCode, onBack }: BrandDetailProps) {
   const { data: brand, isLoading, error, refetch } = useBrandConfig(brandCode);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
@@ -185,11 +186,9 @@ export function BrandDetail({ brandCode }: BrandDetailProps) {
       <div className="flex flex-col h-full w-full overflow-hidden">
         <div className="px-4 sm:px-6 lg:px-8 pt-6">
           <div className="flex items-center gap-3 mb-4">
-            <Link to="/revenue/statements">
-              <Button variant="ghost" size="icon" aria-label="Back to dashboard">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
+            <Button variant="ghost" size="icon" aria-label="Back to dashboard" onClick={onBack}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
             <h1 className="text-xl font-semibold text-foreground">Brand Detail</h1>
           </div>
         </div>
@@ -218,11 +217,9 @@ export function BrandDetail({ brandCode }: BrandDetailProps) {
       {/* Header with back button */}
       <div className="px-4 sm:px-6 lg:px-8 pt-6">
         <div className="flex items-center gap-3 mb-4">
-          <Link to="/revenue/statements">
-            <Button variant="ghost" size="icon" aria-label="Back to dashboard">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
+          <Button variant="ghost" size="icon" aria-label="Back to dashboard" onClick={onBack}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
           <h1 className="text-xl font-semibold text-foreground truncate">
             {brand.brandName}
           </h1>

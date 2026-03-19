@@ -7,12 +7,12 @@
  */
 
 import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
 import { Button, Skeleton } from '@hnc-partners/ui-components';
-import { FileText, Plus, Grid3X3 } from 'lucide-react';
+import { FileText, Plus } from 'lucide-react';
 import { useStatementBrands } from '../api';
 import { ServiceStatusBar } from './ServiceStatusBar';
 import { BrandCard } from './BrandCard';
+import { BrandDetail } from './BrandDetail';
 import { BrandConfigDialog } from './forms/BrandConfigDialog';
 
 function DashboardSkeleton() {
@@ -69,6 +69,9 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
 export function BrandDashboard() {
   const { data: brands, isLoading, error, refetch } = useStatementBrands();
 
+  // Brand detail view state: null = dashboard, string = detail view
+  const [selectedBrandCode, setSelectedBrandCode] = useState<string | null>(null);
+
   // Dialog state: null = closed, undefined = create mode, string = edit mode (brandCode)
   const [editingBrandCode, setEditingBrandCode] = useState<string | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -98,6 +101,16 @@ export function BrandDashboard() {
     );
   }
 
+  // Show brand detail view when a brand is selected
+  if (selectedBrandCode) {
+    return (
+      <BrandDetail
+        brandCode={selectedBrandCode}
+        onBack={() => setSelectedBrandCode(null)}
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col h-full w-full overflow-hidden">
       {/* Header */}
@@ -106,12 +119,6 @@ export function BrandDashboard() {
           <h1 className="text-xl font-semibold text-foreground">Statements</h1>
           <div className="flex items-center gap-3">
             <ServiceStatusBar />
-            <Link to="/revenue/statements/gaps">
-              <Button variant="outline">
-                <Grid3X3 className="h-4 w-4 mr-2" />
-                View Gaps
-              </Button>
-            </Link>
             <Button onClick={handleOpenCreate}>
               <Plus className="h-4 w-4 mr-2" />
               New Brand
@@ -131,6 +138,7 @@ export function BrandDashboard() {
                 key={brand.brandCode}
                 brand={brand}
                 onEditConfig={handleOpenEdit}
+                onSelect={setSelectedBrandCode}
               />
             ))}
           </div>

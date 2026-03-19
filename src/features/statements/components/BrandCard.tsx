@@ -5,7 +5,6 @@
  * Click to navigate to brand detail view.
  */
 
-import { useNavigate } from '@tanstack/react-router';
 import { Calendar, Clock, Settings } from 'lucide-react';
 import { Button } from '@hnc-partners/ui-components';
 import { cn } from '@/lib/utils';
@@ -17,6 +16,8 @@ interface BrandCardProps {
   brand: RMBrandConfigWithStatus;
   /** Called when the settings/gear icon is clicked (opens edit dialog) */
   onEditConfig?: (brandCode: string) => void;
+  /** Called when the card is clicked (opens detail view) */
+  onSelect?: (brandCode: string) => void;
 }
 
 function formatDate(isoString: string | null): string {
@@ -34,22 +35,21 @@ function formatGranularity(g: string): string {
   return g.charAt(0).toUpperCase() + g.slice(1);
 }
 
-export function BrandCard({ brand, onEditConfig }: BrandCardProps) {
-  const navigate = useNavigate();
+export function BrandCard({ brand, onEditConfig, onSelect }: BrandCardProps) {
   const isDisabled = !brand.enabled;
   const health = isDisabled ? 'unknown' as const : brand.health;
+
+  const handleSelect = () => onSelect?.(brand.brandCode);
 
   return (
     <div
       role="button"
       tabIndex={0}
-      onClick={() =>
-        navigate({ to: '/revenue/statements/$brandCode', params: { brandCode: brand.brandCode } })
-      }
+      onClick={handleSelect}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          navigate({ to: '/revenue/statements/$brandCode', params: { brandCode: brand.brandCode } });
+          handleSelect();
         }
       }}
       className={cn(

@@ -159,7 +159,6 @@ describe('BrandDashboard', () => {
 
     renderWithQuery(<BrandDashboard />);
     expect(screen.getByText('Statements')).toBeInTheDocument();
-    expect(screen.getByText('View Gaps')).toBeInTheDocument();
     expect(screen.getByText('New Brand')).toBeInTheDocument();
   });
 
@@ -179,7 +178,7 @@ describe('BrandDashboard', () => {
     expect(screen.getByText('New Brand', { selector: '[role="dialog"] *' })).toBeInTheDocument();
   });
 
-  it('renders View Gaps link pointing to gaps route', () => {
+  it('switches to brand detail view when a card is clicked', async () => {
     mockUseStatementBrands.mockReturnValue({
       data: [makeBrand()],
       isLoading: false,
@@ -187,9 +186,12 @@ describe('BrandDashboard', () => {
       refetch: mockRefetch,
     });
 
+    const user = userEvent.setup();
     renderWithQuery(<BrandDashboard />);
-    const link = screen.getByText('View Gaps').closest('a');
-    expect(link).toHaveAttribute('href', '/revenue/statements/gaps');
+
+    await user.click(screen.getByRole('button', { name: /view statements for test brand/i }));
+    // BrandDetail renders with the brand code (loading state)
+    expect(screen.getByLabelText('Back to dashboard')).toBeInTheDocument();
   });
 
   it('renders multiple brand cards in a grid', () => {

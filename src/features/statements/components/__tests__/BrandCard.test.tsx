@@ -10,11 +10,7 @@ import userEvent from '@testing-library/user-event';
 import { BrandCard } from '../BrandCard';
 import type { RMBrandConfigWithStatus } from '../../types';
 
-// Mock router — external navigation service, not a React component
-const mockNavigate = vi.fn();
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => mockNavigate,
-}));
+// No router mock needed — BrandCard uses onSelect callback now
 
 function makeBrand(overrides: Partial<RMBrandConfigWithStatus> = {}): RMBrandConfigWithStatus {
   return {
@@ -71,25 +67,24 @@ describe('BrandCard', () => {
     expect(screen.getByText('Monthly')).toBeInTheDocument();
   });
 
-  it('navigates to brand detail on click', async () => {
+  it('calls onSelect with brandCode on click', async () => {
     const user = userEvent.setup();
-    render(<BrandCard brand={makeBrand()} />);
+    const onSelect = vi.fn();
+    render(<BrandCard brand={makeBrand()} onSelect={onSelect} />);
 
     await user.click(screen.getByRole('button', { name: /view statements for test brand/i }));
-    expect(mockNavigate).toHaveBeenCalledWith({
-      to: '/revenue/statements/$brandCode',
-      params: { brandCode: 'test-brand' },
-    });
+    expect(onSelect).toHaveBeenCalledWith('test-brand');
   });
 
-  it('navigates on Enter key', async () => {
+  it('calls onSelect on Enter key', async () => {
     const user = userEvent.setup();
-    render(<BrandCard brand={makeBrand()} />);
+    const onSelect = vi.fn();
+    render(<BrandCard brand={makeBrand()} onSelect={onSelect} />);
 
     const card = screen.getByRole('button', { name: /view statements for test brand/i });
     card.focus();
     await user.keyboard('{Enter}');
-    expect(mockNavigate).toHaveBeenCalled();
+    expect(onSelect).toHaveBeenCalledWith('test-brand');
   });
 
   it('calls onEditConfig when settings button is clicked', async () => {
@@ -99,8 +94,6 @@ describe('BrandCard', () => {
 
     await user.click(screen.getByRole('button', { name: /configure test brand/i }));
     expect(onEdit).toHaveBeenCalledWith('test-brand');
-    // Should NOT navigate (stopPropagation)
-    expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   it('shows reduced opacity when brand is disabled', () => {
