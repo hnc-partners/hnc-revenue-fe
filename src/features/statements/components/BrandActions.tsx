@@ -6,7 +6,7 @@
  */
 
 import { useRef, useState } from 'react';
-import { Link } from '@tanstack/react-router';
+import { AppLink } from '@/lib/AppLink';
 import {
   Button,
   ConfirmDialog,
@@ -157,7 +157,7 @@ export function BrandActions({ brand, onEditConfig }: BrandActionsProps) {
 
       {/* Manual input brands: New Entry → links to manual entry form */}
       {isManualInput && (
-        <Link
+        <AppLink
           to="/revenue/statements/manual-entry"
           search={{ brandCode: brand.brandCode }}
         >
@@ -165,7 +165,7 @@ export function BrandActions({ brand, onEditConfig }: BrandActionsProps) {
             <PenLine className="h-3.5 w-3.5 mr-1.5" />
             New Entry
           </Button>
-        </Link>
+        </AppLink>
       )}
 
       {/* Pause/Resume for automated brands */}

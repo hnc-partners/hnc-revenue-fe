@@ -7,7 +7,7 @@
  */
 
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useSafeNavigate } from '@/lib/use-safe-navigate';
 import {
   Button,
   Badge,
@@ -187,7 +187,7 @@ interface ProcessBatchStepProps {
 }
 
 export function ProcessBatchStep({ batchId }: ProcessBatchStepProps) {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
   const processBatch = useProcessBatch();
   const [result, setResult] = useState<ProcessingResult | null>(null);
 

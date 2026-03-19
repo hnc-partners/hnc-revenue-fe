@@ -7,7 +7,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useSafeNavigate } from '@/lib/use-safe-navigate';
 import {
   useReactTable,
   getCoreRowModel,
@@ -268,7 +268,7 @@ interface ValidationDetailPageProps {
 // ---------------------------------------------------------------------------
 
 export function ValidationDetailPage({ batchId }: ValidationDetailPageProps) {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
   const [activeTab, setActiveTab] = useState<StatusTabId>('all');
 
   const {

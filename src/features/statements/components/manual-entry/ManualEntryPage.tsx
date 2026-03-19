@@ -16,7 +16,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { Link } from '@tanstack/react-router';
+import { AppLink } from '@/lib/AppLink';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -429,11 +429,11 @@ export function ManualEntryPage({ initialBrandCode }: ManualEntryPageProps) {
       <div className="flex flex-col h-full w-full overflow-hidden">
         <div className="px-4 sm:px-6 lg:px-8 pt-6">
           <div className="flex items-center gap-3 mb-4">
-            <Link to="/revenue/statements">
+            <AppLink to="/revenue/statements">
               <Button variant="ghost" size="icon" aria-label="Back to dashboard">
                 <ArrowLeft className="h-4 w-4" />
               </Button>
-            </Link>
+            </AppLink>
             <h1 className="text-xl font-semibold text-foreground">
               Manual Entry
             </h1>
@@ -456,9 +456,9 @@ export function ManualEntryPage({ initialBrandCode }: ManualEntryPageProps) {
               <Button variant="outline" onClick={handleNewEntry}>
                 New Entry
               </Button>
-              <Link to="/revenue/statements/$brandCode" params={{ brandCode: selectedBrandCode }}>
+              <AppLink to="/revenue/statements/$brandCode" params={{ brandCode: selectedBrandCode }}>
                 <Button>View Brand Detail</Button>
-              </Link>
+              </AppLink>
             </div>
           </div>
         </div>
@@ -474,7 +474,7 @@ export function ManualEntryPage({ initialBrandCode }: ManualEntryPageProps) {
       {/* Header */}
       <div className="px-4 sm:px-6 lg:px-8 pt-6">
         <div className="flex items-center gap-3 mb-4">
-          <Link
+          <AppLink
             to={
               selectedBrandCode
                 ? '/revenue/statements/$brandCode'
@@ -485,7 +485,7 @@ export function ManualEntryPage({ initialBrandCode }: ManualEntryPageProps) {
             <Button variant="ghost" size="icon" aria-label="Back">
               <ArrowLeft className="h-4 w-4" />
             </Button>
-          </Link>
+          </AppLink>
           <div>
             <h1 className="text-xl font-semibold text-foreground">
               Manual Statement Entry

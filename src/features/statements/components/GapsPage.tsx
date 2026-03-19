@@ -8,7 +8,7 @@
  */
 
 import { useMemo, useState } from 'react';
-import { Link } from '@tanstack/react-router';
+import { AppLink } from '@/lib/AppLink';
 import { Button, Skeleton, Badge, Input } from '@hnc-partners/ui-components';
 import {
   ArrowLeft,
@@ -166,7 +166,7 @@ function GapCell({ status, brandCode }: { status: RMGapStatus; brandCode: string
   // Link missing/failed/partial cells to brand detail for investigation
   if (status !== 'received') {
     return (
-      <Link
+      <AppLink
         to="/revenue/statements/$brandCode"
         params={{ brandCode }}
         className={cn(
@@ -177,7 +177,7 @@ function GapCell({ status, brandCode }: { status: RMGapStatus; brandCode: string
         title={`${config.label} — click to investigate`}
       >
         <span className="sr-only">{config.label}</span>
-      </Link>
+      </AppLink>
     );
   }
 
@@ -360,13 +360,13 @@ function GapMatrix({
               className="border-t border-border hover:bg-muted/30 transition-colors"
             >
               <td className="sticky left-0 z-10 bg-card px-3 py-2 text-sm font-medium text-foreground border-r border-border">
-                <Link
+                <AppLink
                   to="/revenue/statements/$brandCode"
                   params={{ brandCode: row.brandCode }}
                   className="hover:text-mf-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                 >
                   {row.brandName}
-                </Link>
+                </AppLink>
               </td>
               {periods.map((period) => {
                 const status = row.cells.get(period);
@@ -458,12 +458,12 @@ export function GapsPage() {
       <div className="px-4 sm:px-6 lg:px-8 pt-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
           <div className="flex items-center gap-3">
-            <Link to="/revenue/statements">
+            <AppLink to="/revenue/statements">
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <ArrowLeft className="h-4 w-4" />
                 <span className="sr-only">Back to Statements</span>
               </Button>
-            </Link>
+            </AppLink>
             <h1 className="text-xl font-semibold text-foreground">
               Statement Gaps
             </h1>

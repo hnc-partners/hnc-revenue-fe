@@ -9,7 +9,8 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import { useSearch, useNavigate } from '@tanstack/react-router';
+import { useSafeNavigate } from '@/lib/use-safe-navigate';
+import { useSafeSearch } from '@/lib/useSafeSearch';
 import { Skeleton, Button } from '@hnc-partners/ui-components';
 import { AlertTriangle, BarChart3, X } from 'lucide-react';
 import {
@@ -188,8 +189,8 @@ function groupByDealType(data: CommissionSummary[]): GroupedSummaryRow[] {
 const DEFAULT_LIMIT = 50;
 
 export function CommissionSummaryPage() {
-  const navigate = useNavigate();
-  const search = useSearch({ strict: false }) as Record<string, string | undefined>;
+  const navigate = useSafeNavigate();
+  const search = useSafeSearch();
 
   // Initialize dimension from URL
   const [dimension, setDimension] = useState<SummaryDimension>(
@@ -273,7 +274,7 @@ export function CommissionSummaryPage() {
     (row: CommissionSummary) => {
       navigate({
         to: '/revenue/commissions/results',
-        search: { contactId: row.contact_id } as Record<string, string>,
+        search: { contactId: row.contact_id },
       });
     },
     [navigate]
@@ -283,7 +284,7 @@ export function CommissionSummaryPage() {
     (row: CommissionSummaryByGA) => {
       navigate({
         to: '/revenue/commissions/results',
-        search: { gamingAccountId: row.gaming_account_id } as Record<string, string>,
+        search: { gamingAccountId: row.gaming_account_id },
       });
     },
     [navigate]
@@ -293,7 +294,7 @@ export function CommissionSummaryPage() {
     (row: CommissionSummaryByBrand) => {
       navigate({
         to: '/revenue/commissions/results',
-        search: { brandId: row.brand_id } as Record<string, string>,
+        search: { brandId: row.brand_id },
       });
     },
     [navigate]

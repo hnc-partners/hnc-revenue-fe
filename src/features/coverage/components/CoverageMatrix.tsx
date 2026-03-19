@@ -5,7 +5,7 @@
  * Brands as rows, periods as columns, color-coded cells by status.
  */
 
-import { useNavigate } from '@tanstack/react-router';
+import { useSafeNavigate } from '@/lib/use-safe-navigate';
 import { Badge } from '@hnc-partners/ui-components';
 import { Check, X, Minus, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -93,7 +93,7 @@ function getGranularityVariant(granularity: CoverageGranularity) {
 }
 
 export function CoverageMatrix({ data }: CoverageMatrixProps) {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
 
   if (data.length === 0) {
     return (

@@ -6,7 +6,7 @@
  */
 
 import { X, ExternalLink, User, DollarSign, FileText } from 'lucide-react';
-import { useNavigate } from '@tanstack/react-router';
+import { useSafeNavigate } from '@/lib/use-safe-navigate';
 import { Button } from '@hnc-partners/ui-components';
 import { cn } from '@/lib/utils';
 import type { PlayerRevenue } from '../types';
@@ -54,7 +54,7 @@ export function RevenueDetailPanel({
   onClose,
   onViewPlayer,
 }: RevenueDetailPanelProps) {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
 
   return (
     <div className="flex flex-col h-full bg-background">

@@ -1,20 +1,18 @@
 /**
- * useSafeSearch — graceful wrapper around TanStack Router's useSearch.
+ * useSafeSearch — MF-safe search params hook.
  *
- * When rendered inside the shell (MF mode via RevenuePage tabs with useState),
- * there is no RouterProvider in the tree, so useSearch throws.
- * This hook catches that error and returns an empty object as fallback,
- * making deep-link params optional. In standalone dev mode (with router),
- * useSearch works normally and params are forwarded.
+ * Does NOT import @tanstack/react-router. Reads search params directly
+ * from window.location.search using URLSearchParams.
+ *
+ * Returns a plain Record<string, string | undefined> of current URL
+ * query parameters. Stable across standalone dev and MF mode.
  */
-import { useSearch } from '@tanstack/react-router';
 
 export function useSafeSearch(): Record<string, string | undefined> {
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useSearch({ strict: false }) as Record<string, string | undefined>;
-  } catch {
-    // No router context (MF mode inside shell tabs) — return empty defaults
-    return {};
-  }
+  const params = new URLSearchParams(window.location.search);
+  const result: Record<string, string | undefined> = {};
+  params.forEach((value, key) => {
+    result[key] = value;
+  });
+  return result;
 }

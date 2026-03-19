@@ -7,7 +7,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useSafeNavigate } from '@/lib/use-safe-navigate';
 import {
   useReactTable,
   getCoreRowModel,
@@ -259,7 +259,7 @@ function Pagination({ meta, currentPage, onPageChange }: PaginationProps) {
 const DEFAULT_LIMIT = 25;
 
 export function ValidationOverviewPage() {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
   const [page, setPage] = useState(1);
 
   const { data: response, isLoading, error, refetch } = useValidationOverview({
