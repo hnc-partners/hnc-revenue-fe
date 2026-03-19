@@ -43,7 +43,7 @@ class TabErrorBoundary extends Component<
           <div className="text-center space-y-2">
             <h3 className="text-lg font-medium">{this.props.tabName}</h3>
             <p className="text-sm text-muted-foreground">
-              This tab requires shell routing context. Please navigate via the shell URL.
+              Something went wrong loading this tab. Try refreshing the page.
             </p>
           </div>
         </div>

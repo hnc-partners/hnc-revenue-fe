@@ -406,7 +406,7 @@ function ImportBatchesTable({
         header: () => <div className="text-right">Records</div>,
         cell: ({ row }) => (
           <div className="text-right font-mono tabular-nums text-sm">
-            {row.original.rowCount.toLocaleString()}
+            {row.original.rowCount != null ? row.original.rowCount.toLocaleString() : '—'}
           </div>
         ),
       },
